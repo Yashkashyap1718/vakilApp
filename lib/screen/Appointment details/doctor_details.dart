@@ -39,163 +39,270 @@ class DoctorDetails extends StatelessWidget {
         ],
       ),
       body: Expanded(
-        child: Stack(alignment: Alignment.bottomCenter, children: [
+        child: Stack(children: [
           SingleChildScrollView(
               child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: SizedBox(
-                  height: size.height,
-                  child: ListView.builder(
-                      itemCount: 15,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, indx) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: Container(
-                            width: size.width / 1.3,
-                            decoration: const BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Row(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 45,
-                                      backgroundImage: AssetImage(doctorImg),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 15),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Dr. Leelamohan PVR',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text('General Physician'),
-                                          Text('HSR Layout'),
-                                          Row(
-                                            children: [
-                                              Icon(
-                                                Icons.thumb_up_alt,
-                                                color: Colors.green,
-                                                size: 18,
-                                              ),
-                                              Text(' 91% • 12 Years Exp')
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(
-                                          color: const Color.fromARGB(
-                                              255, 215, 213, 213))),
-                                  child: const Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text('App Logo'),
-                                          Text('Clinics')
-                                        ],
-                                      ),
-                                      Text(
-                                          'Comprehensive approach to\nhealthcare'),
-                                      Icon(
-                                        Icons.info_outline,
-                                        color:
-                                            Color.fromARGB(255, 184, 181, 181),
-                                      )
-                                    ],
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: size.height * .075,
+                          backgroundImage: const AssetImage(doctorImg),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 15),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Dr. Leelamohan PVR',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text('General Physician'),
+                              Text('HSR Layout'),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.thumb_up_alt,
+                                    color: Colors.green,
+                                    size: 18,
                                   ),
-                                ),
-                              ],
+                                  Text(' 91% • 12 Years Exp')
+                                ],
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      width: size.width,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                              color: const Color.fromARGB(255, 215, 213, 213))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [Text('App Logo'), Text('Clinics')],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Container(
+                              height: size.height * .05,
+                              width: 1.5,
+                              color: const Color.fromARGB(255, 218, 213, 213),
                             ),
                           ),
-                        );
-                      }),
+                          const Text('Comprehensive approach to\nhealthcare'),
+                          const Icon(
+                            Icons.info_outline,
+                            color: Colors.grey,
+                          )
+                        ],
+                      ),
+                    ),
+                    const ListTile(
+                      dense: true,
+                      leading: Icon(
+                        Icons.check_circle_outline,
+                        color: Colors.purple,
+                        size: 20,
+                      ),
+                      title: Text(
+                        'Lifestyle treament over medicone prescription',
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.normal),
+                      ),
+                    ),
+                    const ListTile(
+                      dense: true,
+                      leading: Icon(
+                        Icons.check_circle_outline,
+                        color: Colors.purple,
+                        size: 20,
+                      ),
+                      title: Text(
+                        'Lifestyle treament over medicone prescription',
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.normal),
+                      ),
+                    ),
+                    const ListTile(
+                      dense: true,
+                      leading: Icon(
+                        Icons.check_circle_outline,
+                        color: Colors.purple,
+                        size: 20,
+                      ),
+                      title: Text(
+                        'Lifestyle treament over medicone prescription',
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.normal),
+                      ),
+                    )
+                  ],
                 ),
               ),
+              const Divider(),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: size.width / 5),
+                child: Container(
+                  padding: const EdgeInsets.all(3),
+                  width: size.width,
+                  // height: 100,
+                  decoration: BoxDecoration(
+                      color: grey2Color,
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            color: whiteColor,
+                            borderRadius: BorderRadius.circular(8)),
+                        child: const Center(
+                          child: Text(
+                            'Clinic Visit',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        child: const Center(
+                          child: Text(
+                            'Video Consult',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 128, 126, 126)),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              const Divider(),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'Highly Recommended for',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                      ],
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.handshake),
+                      title: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Doctor Fiendliness',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '80% patients find the doctor friendly and approachable',
+                            style: TextStyle(fontSize: 10),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              )
             ],
           )),
-          Padding(
-            padding: const EdgeInsets.only(top: 15),
-            child: Row(
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      launchUrl(Uri.parse('tel:+918168605829'));
-                    },
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Colors.blue),
-                      ),
-                      child: const Center(
-                        child: Text(
-                          'Contact Lawer',
-                          style: const TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: size.width,
+              color: whiteColor,
+              height: size.height * .11,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          launchUrl(Uri.parse('tel:+918168605829'));
+                        },
+                        child: Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.blue),
+                          child: const Center(
+                            child: Text(
+                              'Book Lawer visit',
+                              style: const TextStyle(
+                                  color: whiteColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14),
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {},
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.blue),
-                      child: const Center(
-                        child: Text(
-                          'Book Clinic Visit',
-                          style: TextStyle(
-                              color: whiteColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {},
+                        child: Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: Colors.blue, width: 2)),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.call,
+                                color: Colors.blue,
+                                size: 20,
+                              ),
+                              Text(
+                                ' Call Lawer',
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                )
-              ],
+                    )
+                  ],
+                ),
+              ),
             ),
           ),
         ]),

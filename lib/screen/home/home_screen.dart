@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:vakil_app/screen/Appointment%20details/appointment_details.dart';
 import 'package:vakil_app/screen/drawer/drawer.dart';
+import 'package:vakil_app/screen/video_consult/video_consult.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/image.dart';
@@ -32,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: whiteColor,
-      drawer: MyDrawer(),
+      drawer: const MyDrawer(),
       appBar: AppBar(
         centerTitle: false,
         backgroundColor: whiteColor,
@@ -126,18 +127,35 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemCount: gridImages.length,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 20,
-                            childAspectRatio: 12 / 17),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 20,
+                                childAspectRatio: 12 / 17),
                         itemBuilder: (BuildContext context, index) {
                           return GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          AppointmentDetailsScreen()));
+                              switch (index) {
+                                case 0:
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            AppointmentDetailsScreen()),
+                                  );
+                                  break;
+                                case 1:
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            VideoConsultScreen()),
+                                  );
+                                  break;
+                                // Add more cases for other indices as needed
+                                default:
+                                // Do nothing or show an error message for unsupported indices
+                              }
                             },
                             child: Container(
                               height: size.height,
@@ -243,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              Divider(
+              const Divider(
                 color: grey2Color,
                 thickness: 7,
               ),
