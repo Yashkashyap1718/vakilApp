@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import 'package:vakil_app/constants/colors.dart';
 import 'package:vakil_app/constants/image.dart';
+import 'package:vakil_app/utils/utils.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 class VideoConsultScreen extends StatefulWidget {
   const VideoConsultScreen({super.key});
@@ -259,7 +262,7 @@ class _VideoConsultScreenState extends State<VideoConsultScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               child: Column(
                 children: [
-                  Row(
+                  const Row(
                     children: [
                       Icon(
                         Icons.lock_outline,
@@ -277,8 +280,8 @@ class _VideoConsultScreenState extends State<VideoConsultScreen> {
                       )
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 15),
                     child: Text(
                       'The Contents of your consultations are private and confidential.',
                       style: TextStyle(
@@ -313,10 +316,10 @@ class _VideoConsultScreenState extends State<VideoConsultScreen> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(10),
-              color: Color.fromARGB(255, 230, 227, 227),
+              padding: const EdgeInsets.all(10),
+              color: const Color.fromARGB(255, 230, 227, 227),
               width: size.width,
-              child: Column(children: [
+              child: const Column(children: [
                 Text(
                   'Practo Guarantee: 100% Money back if no response',
                   style: TextStyle(
@@ -333,7 +336,7 @@ class _VideoConsultScreenState extends State<VideoConsultScreen> {
                 )
               ]),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             const Divider(
@@ -360,7 +363,7 @@ class _VideoConsultScreenState extends State<VideoConsultScreen> {
                     children: [
                       Row(
                         children: [
-                          Text(
+                          const Text(
                             'Pay Using   ',
                             style: TextStyle(
                                 color: Color.fromARGB(255, 116, 113, 113),
@@ -373,7 +376,7 @@ class _VideoConsultScreenState extends State<VideoConsultScreen> {
                           ),
                         ],
                       ),
-                      Text(
+                      const Text(
                         'More Payment Options >',
                         style: TextStyle(
                             color: Colors.blue,
@@ -382,19 +385,27 @@ class _VideoConsultScreenState extends State<VideoConsultScreen> {
                       ),
                     ],
                   ),
-                  Container(
-                    width: size.width,
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(8)),
-                    child: Center(
-                      child: Text(
-                        '₹1049 | Pay & Consult',
-                        style: TextStyle(
-                            color: whiteColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LiveCall()));
+                    },
+                    child: Container(
+                      width: size.width,
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(8)),
+                      child: const Center(
+                        child: Text(
+                          '₹1049 | Pay & Consult',
+                          style: TextStyle(
+                              color: whiteColor,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),
@@ -405,5 +416,30 @@ class _VideoConsultScreenState extends State<VideoConsultScreen> {
         )
       ]),
     );
+  }
+}
+
+final String localUserId = math.Random().nextInt(10000).toString();
+
+class LiveCall extends StatefulWidget {
+  const LiveCall({super.key});
+
+  @override
+  State<LiveCall> createState() => _LiveCallState();
+}
+
+class _LiveCallState extends State<LiveCall> {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+        child: ZegoUIKitPrebuiltCall(
+      appID: Utils.appId,
+      appSign: Utils.appSignId,
+      callID: '1',
+      userID: localUserId,
+      userName: 'user_$localUserId',
+      config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
+        ..hangUpConfirmDialog,
+    ));
   }
 }
