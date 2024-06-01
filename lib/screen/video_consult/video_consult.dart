@@ -85,7 +85,7 @@ class _VideoConsultScreenState extends State<VideoConsultScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: SizedBox(
-                      height: size.height * .1,
+                      height: size.height * .13,
                       child: ListView.builder(
                           itemCount: 4,
                           scrollDirection: Axis.horizontal,

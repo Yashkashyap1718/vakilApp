@@ -1,8 +1,8 @@
 // import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:vakil_app/screen/Auth/otp.dart';
 
@@ -26,6 +26,7 @@ class _MobileScreenState extends State<MobileScreen>
   late TabController _tabController;
 
   int _currentPageIndex = 0;
+  final int _numPages = 4; // Number of pages in your PageView
 
   List pages = [
     log1Img,
@@ -37,7 +38,7 @@ class _MobileScreenState extends State<MobileScreen>
   @override
   void initState() {
     _pageController = PageController(initialPage: 0);
-    _tabController = TabController(length: pages.length, vsync: this);
+    _tabController = TabController(length: _numPages, vsync: this);
     countryCode.text = "+91";
 
     _pageController.addListener(() {
@@ -45,6 +46,16 @@ class _MobileScreenState extends State<MobileScreen>
       if (currentIndex != _tabController.index) {
         _tabController.animateTo(currentIndex);
       }
+    });
+
+    // Start automatic scrolling after 3 seconds
+    Timer.periodic(const Duration(seconds: 3), (timer) {
+      int nextPageIndex = (_currentPageIndex + 1) % _numPages;
+      _pageController.animateToPage(
+        nextPageIndex,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
     });
 
     super.initState();
@@ -120,9 +131,9 @@ class _MobileScreenState extends State<MobileScreen>
                         horizontal: 18, vertical: 10),
                     child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          child: const Row(
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          child: Row(
                             children: [
                               Text(
                                 "Let's get started! Enter your mobile Number",
@@ -137,9 +148,10 @@ class _MobileScreenState extends State<MobileScreen>
                             height: 50,
                             width: size.width,
                             decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 255, 255, 255),
+                                color: const Color.fromARGB(255, 255, 255, 255),
                                 border: Border.all(
-                                    color: Color.fromARGB(135, 179, 177, 177)),
+                                    color: const Color.fromARGB(
+                                        135, 179, 177, 177)),
                                 borderRadius: BorderRadius.circular(10)),
                             child: Row(
                               children: [
@@ -250,9 +262,6 @@ class PageIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // if (!isOnDesktopAndWeb) {
-    //   return const SizedBox.shrink();
-    // }
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
     return Padding(
@@ -260,39 +269,11 @@ class PageIndicator extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          // IconButton(
-          //   splashRadius: 16.0,
-          //   padding: EdgeInsets.zero,
-          //   onPressed: () {
-          //     if (currentPageIndex == 0) {
-          //       return;
-          //     }
-          //     onUpdateCurrentPageIndex(currentPageIndex - 1);
-          //   },
-          //   icon: const Icon(
-          //     Icons.arrow_left_rounded,
-          //     size: 32.0,
-          //   ),
-          // ),
           TabPageSelector(
             controller: tabController,
-            color: colorScheme.background,
+            color: colorScheme.surface,
             selectedColor: colorScheme.primary,
           ),
-          // IconButton(
-          //   splashRadius: 16.0,
-          //   padding: EdgeInsets.zero,
-          //   onPressed: () {
-          //     if (currentPageIndex == 2) {
-          //       return;
-          //     }
-          //     onUpdateCurrentPageIndex(currentPageIndex + 1);
-          //   },
-          //   icon: const Icon(
-          //     Icons.arrow_right_rounded,
-          //     size: 32.0,
-          //   ),
-          // ),
         ],
       ),
     );

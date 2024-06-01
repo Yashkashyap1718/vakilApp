@@ -1,12 +1,36 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
+
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vakil_app/constants/colors.dart';
 import 'package:vakil_app/constants/image.dart';
+import 'package:http/http.dart' as http;
 
-class DoctorDetails extends StatelessWidget {
+class DoctorDetails extends StatefulWidget {
   const DoctorDetails({super.key});
+
+  @override
+  State<DoctorDetails> createState() => _DoctorDetailsState();
+}
+
+class _DoctorDetailsState extends State<DoctorDetails>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  bool _isFilled = false;
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +49,30 @@ class DoctorDetails extends StatelessWidget {
             )),
         actions: [
           IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.star_border_outlined,
-                color: whiteColor,
-              )),
+            onPressed: () {
+              setState(() {
+                _isFilled = !_isFilled;
+              });
+              if (_isFilled) {
+                AnimatedSnackBar.material(
+                  'Icon is now filled',
+                  type: AnimatedSnackBarType.success,
+                  duration: const Duration(seconds: 3),
+                  mobileSnackBarPosition: MobileSnackBarPosition.top,
+                ).show(context);
+              }
+            },
+            icon: Icon(
+              _isFilled ? Icons.star : Icons.star_border,
+              color: _isFilled ? whiteColor : Colors.grey,
+            ),
+          ),
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Share.share(
+                  'https://play.google.com/store/apps/details?id=com.dr.ortho.drortho&pcampaignid=web_share',
+                );
+              },
               icon: const Icon(
                 Icons.share_outlined,
                 color: whiteColor,
@@ -168,37 +209,85 @@ class DoctorDetails extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(3),
                   width: size.width,
-                  // height: 100,
                   decoration: BoxDecoration(
-                      color: grey2Color,
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            color: whiteColor,
-                            borderRadius: BorderRadius.circular(8)),
-                        child: const Center(
-                          child: Text(
-                            'Clinic Visit',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                    color: grey2Color,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: TabBar(
+                    labelColor: baseColor,
+                    unselectedLabelColor:
+                        const Color.fromARGB(255, 163, 161, 161),
+                    dividerColor: Colors.transparent,
+                    controller: _tabController,
+                    indicator: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: whiteColor, // Color of selected tab indicator
+                    ),
+                    tabs: [
+                      Tab(
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'Clinic Visit',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
                       ),
-                      Container(
-                        child: const Center(
-                          child: Text(
-                            'Video Consult',
-                            style: TextStyle(
+                      Tab(
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'Video',
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 128, 126, 126)),
+                                // color: Color.fromARGB(255, 128, 126, 126),
+                              ),
+                            ),
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
+                ),
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              SizedBox(
+                height: 200, // Adjust height as needed
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    // Container for Clinic Visit content
+                    Container(
+                      color: Colors.red,
+                      child: const Center(
+                        child: Text(
+                          'Clinic Visit Content',
+                          style: TextStyle(fontSize: 20, color: whiteColor),
+                        ),
+                      ),
+                    ),
+                    // Container for Video Consult content
+                    Container(
+                      color: Colors.blue,
+                      child: const Center(
+                        child: Text(
+                          'Video Consult Content',
+                          style: TextStyle(fontSize: 20, color: whiteColor),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const Divider(),
@@ -231,9 +320,63 @@ class DoctorDetails extends StatelessWidget {
                           )
                         ],
                       ),
-                    )
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.handshake),
+                      title: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Doctor Fiendliness',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '80% patients find the doctor friendly and approachable',
+                            style: TextStyle(fontSize: 10),
+                          )
+                        ],
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.handshake),
+                      title: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Doctor Fiendliness',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '80% patients find the doctor friendly and approachable',
+                            style: TextStyle(fontSize: 10),
+                          )
+                        ],
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.handshake),
+                      title: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Doctor Fiendliness',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '80% patients find the doctor friendly and approachable',
+                            style: TextStyle(fontSize: 10),
+                          )
+                        ],
+                      ),
+                    ),
                   ],
                 ),
+              ),
+              const SizedBox(
+                height: 20,
               )
             ],
           )),
@@ -249,9 +392,7 @@ class DoctorDetails extends StatelessWidget {
                   children: [
                     Expanded(
                       child: InkWell(
-                        onTap: () {
-                          launchUrl(Uri.parse('tel:+918168605829'));
-                        },
+                        onTap: () {},
                         child: Container(
                           height: 40,
                           decoration: BoxDecoration(
@@ -260,7 +401,7 @@ class DoctorDetails extends StatelessWidget {
                           child: const Center(
                             child: Text(
                               'Book Lawer visit',
-                              style: const TextStyle(
+                              style: TextStyle(
                                   color: whiteColor,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14),
@@ -274,7 +415,9 @@ class DoctorDetails extends StatelessWidget {
                     ),
                     Expanded(
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          launchUrl(Uri.parse('tel:+918168605829'));
+                        },
                         child: Container(
                           height: 40,
                           decoration: BoxDecoration(

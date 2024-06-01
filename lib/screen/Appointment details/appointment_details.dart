@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:vakil_app/constants/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vakil_app/screen/Appointment%20details/doctor_details.dart';
@@ -96,7 +94,7 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                         child: TextField(
                           controller: searchController,
                           onChanged: (value) {},
-                          keyboardType: TextInputType.phone,
+                          keyboardType: TextInputType.text,
                           decoration: const InputDecoration(
                               prefixIcon: Icon(Icons.search),
                               hintText: 'Search here....',
@@ -130,7 +128,7 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                                     fontWeight: FontWeight.w500),
                               ),
                               TextSpan(
-                                text: ' Prime',
+                                text: ' Prime ',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
