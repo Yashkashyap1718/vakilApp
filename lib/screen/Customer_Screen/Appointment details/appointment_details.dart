@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:vakil_app/constants/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:vakil_app/screen/Appointment%20details/doctor_details.dart';
+import 'package:vakil_app/screen/Customer_Screen/Appointment%20details/doctor_details.dart';
 
-import '../../constants/image.dart';
+import '../../../constants/image.dart';
 
 class AppointmentDetailsScreen extends StatefulWidget {
   const AppointmentDetailsScreen({super.key});

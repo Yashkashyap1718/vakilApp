@@ -1,12 +1,14 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
-import 'package:vakil_app/screen/Appointment%20details/appointment_details.dart';
-import 'package:vakil_app/screen/drawer/drawer.dart';
-import 'package:vakil_app/screen/video_consult/video_consult.dart';
+import 'package:vakil_app/model/user_model.dart';
+import 'package:vakil_app/screen/Customer_Screen/Appointment%20details/appointment_details.dart';
+import 'package:vakil_app/screen/Customer_Screen/drawer/drawer.dart';
+import 'package:vakil_app/screen/Customer_Screen/video_consult/video_consult.dart';
+import 'package:vakil_app/services/database_provider.dart';
 
-import '../../constants/colors.dart';
-import '../../constants/image.dart';
+import '../../../constants/colors.dart';
+import '../../../constants/image.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -30,9 +32,23 @@ class _HomeScreenState extends State<HomeScreen> {
   final List gridbelowText = ["Confirm appointment", "Correct within 60 secs"];
   final List ListText = ["Medicine", "Lab Tests", "Surgeries"];
 
+  UserModel user = UserModel();
+  // DatabaseProvider db = DatabaseProvider();
+
+  // getUser() {
+  //   db.getUsers().then(
+  //     (v) {
+  //       setState(() {
+  //         user = v;
+  //       });
+  //     },
+  //   );
+  // }
+
   @override
   void initState() {
     super.initState();
+    // getUser();
     _focusNode = FocusNode();
   }
 
@@ -149,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
                               crossAxisSpacing: 20,
-                              childAspectRatio: 12 / 14),
+                              childAspectRatio: 12 / 17),
                       itemBuilder: (BuildContext context, index) {
                         return GestureDetector(
                           onTap: () {
@@ -176,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             }
                           },
                           child: Container(
-                            height: size.height,
+                            // height: size.height,
                             clipBehavior: Clip.antiAlias,
                             decoration: BoxDecoration(
                                 color: whiteColor,
@@ -231,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       }),
                   const SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   GridView.builder(
                       itemCount: listImages.length,
@@ -240,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
-                              childAspectRatio: 12 / 13,
+                              childAspectRatio: 12 / 16,
                               crossAxisSpacing: 15),
                       itemBuilder: (BuildContext context, index) {
                         return Container(

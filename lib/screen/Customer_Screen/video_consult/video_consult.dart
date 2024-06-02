@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:vakil_app/constants/colors.dart';
 import 'package:vakil_app/constants/image.dart';
 import 'package:vakil_app/utils/utils.dart';
-import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+// import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 class VideoConsultScreen extends StatefulWidget {
   const VideoConsultScreen({super.key});
@@ -387,10 +387,10 @@ class _VideoConsultScreenState extends State<VideoConsultScreen> {
                   ),
                   InkWell(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LiveCall()));
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => const LiveCall()));
                     },
                     child: Container(
                       width: size.width,
@@ -421,25 +421,26 @@ class _VideoConsultScreenState extends State<VideoConsultScreen> {
 
 final String localUserId = math.Random().nextInt(10000).toString();
 
-class LiveCall extends StatefulWidget {
-  const LiveCall({super.key});
+// class LiveCall extends StatefulWidget {
+//   const LiveCall({super.key});
 
-  @override
-  State<LiveCall> createState() => _LiveCallState();
-}
+//   @override
+//   State<LiveCall> createState() => _LiveCallState();
+// }
 
-class _LiveCallState extends State<LiveCall> {
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-        child: ZegoUIKitPrebuiltCall(
-      appID: Utils.appId,
-      appSign: Utils.appSignId,
-      callID: '1',
-      userID: localUserId,
-      userName: 'user_$localUserId',
-      config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
-        ..hangUpConfirmDialog,
-    ));
-  }
-}
+// class _LiveCallState extends State<LiveCall> {
+  // @override
+  // Widget build(BuildContext context) {
+    // return SafeArea(
+      //   child: ZegoUIKitPrebuiltCall(
+      // appID: Utils.appId,
+      // appSign: Utils.appSignId,
+      // callID: '1',
+      // userID: localUserId,
+      // userName: 'user_$localUserId',
+      // config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
+      //   ..hangUpConfirmDialog,
+    // ));
+    
+  // }
+// }

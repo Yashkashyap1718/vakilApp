@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:vakil_app/constants/colors.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:vakil_app/model/user_model.dart';
+import 'package:vakil_app/services/database_provider.dart';
+// import 'package:package_info_plus/package_info_plus.dart';
 
 class MyDrawer extends StatefulWidget {
   MyDrawer({super.key});
@@ -19,7 +21,7 @@ class _MyDrawerState extends State<MyDrawer> {
     'Home',
     'Home',
     'Home',
-    'Home',
+    'Log Out',
   ];
 
   final drawerIcons = [
@@ -48,9 +50,62 @@ class _MyDrawerState extends State<MyDrawer> {
       color: Colors.lightBlue,
     ),
     const Icon(
-      Icons.home,
+      Icons.logout_outlined,
       color: Colors.lightBlue,
     ),
+  ];
+
+  String appVersion = "v. 1.0";
+
+  UserModel user = UserModel();
+  // DatabaseProvider db = DatabaseProvider();
+
+  // getUser() {
+  //   db.getUsers().then(
+  //     (v) {
+  //       setState(() {
+  //         user = v;
+  //       });
+  //     },
+  //   );
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+    // getUser();
+    // _fetchAppVersion();
+  }
+
+  // Future<void> _fetchAppVersion() async {
+  //   PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  //   setState(() {
+  //     appVersion = "v. ${packageInfo.version}";
+  //   });
+  // }
+
+  List<void Function()> onTapFunctions = [
+    () {
+      print('Tapped on item 0');
+    },
+    () {
+      print('Tapped on item 1');
+    },
+    () {
+      print('Tapped on item 2');
+    },
+    () {
+      print('Tapped on item 3');
+    },
+    () {
+      print('Tapped on item 4');
+    },
+    () {
+      print('Tapped on item 5');
+    },
+    () {
+      print('Tapped on item 6');
+    },
   ];
 
   @override
@@ -83,27 +138,27 @@ class _MyDrawerState extends State<MyDrawer> {
                       ),
                     ]),
                   ),
-                  const Column(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
                           Text(
-                            'Akash Kumar',
-                            style: TextStyle(
+                            user.phone.toString(),
+                            style: const TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                         ],
                       ),
-                      Text(
+                      const Text(
                         'View and edit profile',
                         style: TextStyle(
                             color: Colors.lightBlue,
                             fontWeight: FontWeight.bold,
                             fontSize: 12),
                       ),
-                      Text(
+                      const Text(
                         '9% completed',
                         style: TextStyle(fontSize: 12),
                       ),
@@ -171,7 +226,9 @@ class _MyDrawerState extends State<MyDrawer> {
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    onTapFunctions[index]?.call();
+                  },
                   leading: drawerIcons[index],
                   title: Text(drawerTitle[index]),
                   trailing: const Icon(
@@ -185,7 +242,7 @@ class _MyDrawerState extends State<MyDrawer> {
               thickness: 10,
               color: Color.fromARGB(255, 226, 225, 225),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Text(appVersion)
@@ -193,20 +250,5 @@ class _MyDrawerState extends State<MyDrawer> {
         ),
       ),
     );
-  }
-
-  String appVersion = "v. 1.0";
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchAppVersion();
-  }
-
-  Future<void> _fetchAppVersion() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    setState(() {
-      appVersion = "v. ${packageInfo.version}";
-    });
   }
 }

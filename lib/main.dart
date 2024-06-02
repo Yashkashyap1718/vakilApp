@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:vakil_app/Provider/home_provider.dart';
-import 'package:vakil_app/screen/Auth/enter_number.dart';
+import 'package:vakil_app/screen/Customer_Screen/home/home_screen.dart';
+import 'package:vakil_app/screen/role_choose.dart';
+import 'package:vakil_app/screen/Customer_Screen/Auth/enter_number.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,16 +1,26 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:animated_snack_bar/animated_snack_bar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
+import 'package:vakil_app/model/user_model.dart';
+import 'package:vakil_app/services/api_constant.dart';
+import 'package:vakil_app/services/database_provider.dart';
 import 'package:vakil_app/utils/loadingWrapper.dart';
 
-import '../../Provider/home_provider.dart';
-import '../../constants/colors.dart';
+import '../../../Provider/home_provider.dart';
+import '../../../constants/colors.dart';
 import '../home/home_screen.dart';
 
+import 'package:http/http.dart' as http;
+
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
+  const OtpScreen({super.key, required this.phoneNumder});
+
+  final String phoneNumder;
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -25,29 +35,31 @@ class _OtpScreenState extends State<OtpScreen> {
   final bool isActive = false;
   late Timer countdownTimer;
   int resendTime = 60;
-  startTimer() {
-    countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        resendTime = resendTime - 1;
-      });
-      if (resendTime < 1) {
-        stopTimer();
-      }
-    });
-  }
 
-  stopTimer() {
-    if (countdownTimer.isActive) {
-      countdownTimer.cancel();
-    }
-  }
+  final DatabaseProvider db = DatabaseProvider();
+  // startTimer() {
+  //   countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+  //     setState(() {
+  //       resendTime = resendTime - 1;
+  //     });
+  //     if (resendTime < 1) {
+  //       stopTimer();
+  //     }
+  //   });
+  // }
 
-  @override
-  void initState() {
-    startTimer();
+  // stopTimer() {
+  //   if (countdownTimer.isActive) {
+  //     countdownTimer.cancel();
+  //   }
+  // }
 
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   startTimer();
+
+  //   super.initState();
+  // }
   // void resendOtp() async {
   //   try {
   //     await FirebaseAuth.instance.verifyPhoneNumber(
@@ -79,6 +91,102 @@ class _OtpScreenState extends State<OtpScreen> {
   //   }
   // }
 
+  Future<void> confirmOTP(
+      context, String otp, String phoneNumber, HomeProvider prrovider) async {
+    final Map<String, String> payload = {
+      "otp": otp,
+      "mobile_number": phoneNumber
+    };
+
+    if (kDebugMode) {
+      print(payload);
+    }
+
+    try {
+      prrovider.showLoader();
+
+      final http.Response response = await http.post(
+        Uri.parse(baseURL + confirmationEndpoint),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(payload),
+      );
+
+      var data = jsonDecode(response.body);
+
+      // print(response.body);
+
+      String confirmToken = data['token'];
+      print(confirmToken);
+      if (response.statusCode == 200) {
+        UserModel user =
+            UserModel(phone: widget.phoneNumder, token: confirmToken);
+        db.addUser(user);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
+        AnimatedSnackBar.material(
+          'Welcome! User ${widget.phoneNumder}',
+          type: AnimatedSnackBarType.success,
+          duration: const Duration(seconds: 5),
+          mobileSnackBarPosition: MobileSnackBarPosition.top,
+        ).show(context);
+
+        prrovider.hideLoader();
+      } else {
+        throw Exception('Failed to confirm OTP');
+      }
+
+      prrovider.hideLoader();
+    } catch (e) {
+      prrovider.hideLoader();
+
+      debugPrint('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error occurred while confirming OTP.'),
+        ),
+      );
+    }
+  }
+
+  Future<void> resendOTP(context, String phoneNumber) async {
+    final Map<String, String> payload = {
+      "country_code": '91',
+      "mobile_number": phoneNumber
+    };
+
+    try {
+      final http.Response response = await http.post(
+        Uri.parse(baseURL + resendOTPEndpoint),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(payload),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final String msg = responseData['msg'];
+        AnimatedSnackBar.material(
+          msg,
+          type: AnimatedSnackBarType.success,
+          duration: const Duration(seconds: 5),
+          mobileSnackBarPosition: MobileSnackBarPosition.top,
+        ).show(context);
+      } else {
+        throw Exception('Failed to resend OTP');
+      }
+    } catch (e) {
+      debugPrint('Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error occurred while resending OTP.'),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
@@ -87,7 +195,10 @@ class _OtpScreenState extends State<OtpScreen> {
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-              onPressed: () {}, icon: const Icon(Icons.arrow_back_rounded)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.arrow_back_rounded)),
           actions: const [
             Padding(
               padding: EdgeInsets.only(right: 10),
@@ -110,17 +221,17 @@ class _OtpScreenState extends State<OtpScreen> {
           ],
         ),
         body: Consumer<HomeProvider>(
-          builder: (_, homeProvider, __) {
+          builder: (__, homeProvider, _) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Row(
+                  Row(
                     children: [
                       Text(
-                        'Enter the 6-digit OTP sent to\n+918168605829',
-                        style: TextStyle(
+                        'Enter the 4-digit OTP sent to\n${widget.phoneNumder}',
+                        style: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w500),
                       )
                     ],
@@ -128,6 +239,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Form(
                           key: _formKey,
@@ -167,7 +279,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                         color: grey2Color),
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(10)))),
-                            length: 6,
+                            length: 4,
                             onChanged: (value) {
                               code = value;
                             },
@@ -185,48 +297,42 @@ class _OtpScreenState extends State<OtpScreen> {
                           fontSize: 13,
                         ),
                       ),
-                      InkWell(
-                          onTap: () {
-                            homeProvider.showLoader();
-                            // resendOtp();
-                            homeProvider.hideLoader();
-                          },
-                          child: TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              '   Resend',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          )),
+                      TextButton(
+                        onPressed: () async {
+                          await resendOTP(context, widget.phoneNumder);
+                        },
+                        child: const Text(
+                          ' Resend',
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ],
                   ),
-                  resendTime != 0
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Text(
-                            'You can resend OTP after $resendTime second(s)',
-                            style: const TextStyle(
-                                fontSize: 12,
-                                fontFamily: 'Nuntio',
-                                fontWeight: FontWeight.bold,
-                                color: baseColor),
-                          ),
-                        )
-                      : const SizedBox(),
+                  // resendTime != 0
+                  //     ? Padding(
+                  //         padding: const EdgeInsets.only(top: 10),
+                  //         child: Text(
+                  //           'You can resend OTP after $resendTime second(s)',
+                  //           style: const TextStyle(
+                  //               fontSize: 12,
+                  //               fontFamily: 'Nuntio',
+                  //               fontWeight: FontWeight.bold,
+                  //               color: baseColor),
+                  //         ),
+                  //       )
+                  //     : const SizedBox(),
                   Expanded(
                     child: Align(
                       alignment: Alignment.bottomCenter,
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 20),
                         child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const HomeScreen()));
+                          onTap: () async {
+                            await confirmOTP(context, otpController.text,
+                                widget.phoneNumder, homeProvider);
                           },
                           child: Container(
                             height: 50,
