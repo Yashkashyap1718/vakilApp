@@ -1,14 +1,23 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:convert';
+
+import 'package:animated_snack_bar/animated_snack_bar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vakil_app/Provider/home_provider.dart';
 import 'package:vakil_app/model/user_model.dart';
+import 'package:vakil_app/routes/routes.dart';
 import 'package:vakil_app/screen/Customer_Screen/Appointment%20details/appointment_details.dart';
 import 'package:vakil_app/screen/Customer_Screen/drawer/drawer.dart';
 import 'package:vakil_app/screen/Customer_Screen/video_consult/video_consult.dart';
+import 'package:vakil_app/services/api_constant.dart';
 import 'package:vakil_app/services/database_provider.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/image.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -47,9 +56,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    final provider = Provider.of<HomeProvider>(context, listen: false);
+
     super.initState();
     // getUser();
     _focusNode = FocusNode();
+
+    // print('------token------${provider.accessToken}');
+    // getUserDetails(provider);
   }
 
   @override
@@ -58,8 +72,52 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+//    String role = '';
+
+// String phoneNumber = '';
+  fetchUserProfilePreview() async {
+    final token = Provider.of<HomeProvider>(context, listen: false).accessToken;
+    final response = await http.get(
+      Uri.parse(baseURL + getuserProfileEndpoint),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'token': token,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Handle success response
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      final String phoneNumber = responseData['data']['phone'];
+
+      final String role = responseData['data']['role'];
+
+      print(phoneNumber);
+
+      final UserModel user = UserModel(phone: phoneNumber, role: role);
+
+      final database = DatabaseProvider();
+      database.insertUser(user);
+      if (kDebugMode) {
+        print('-----User Profile Preview: $responseData');
+      }
+      return responseData; // Return the fetched user profile data
+    } else {
+      // Handle error response
+      if (kDebugMode) {
+        print(
+            '-----Failed to fetch user profile preview. Error: ${response.statusCode}');
+      }
+      return null; // Return null in case of error
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final token = Provider.of<HomeProvider>(context, listen: false).accessToken;
+    // print(
+    //     '-------------token---------from ---------homescreenn-----------${token}');
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: whiteColor,

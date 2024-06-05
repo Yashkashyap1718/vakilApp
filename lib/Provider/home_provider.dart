@@ -11,8 +11,22 @@ import 'package:vakil_app/services/api_constant.dart';
 
 class HomeProvider extends ChangeNotifier {
   int pageIndex = 0;
-
   bool isLoading = false;
+  late String _accessToken = '';
+  late String temUserPhoneNumber = '';
+
+  String get _temUserPhoneNumber => temUserPhoneNumber;
+
+  void setTempNumber(String number) {
+    temUserPhoneNumber = number;
+  }
+
+  String get accessToken => _accessToken;
+
+  void setAccessToken(String token) {
+    _accessToken = token;
+    notifyListeners();
+  }
 
   updatePageIndex(v) {
     pageIndex = v;
@@ -28,13 +42,13 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //////////    get user  //////////////
-  Future<void> fetchUserProfilePreview(String token) async {
+  //////////   get user  //////////////
+  fetchUserProfilePreview(String token) async {
     final response = await http.get(
       Uri.parse(baseURL + getuserProfileEndpoint),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer $token',
+        'token': token,
       },
     );
 
@@ -44,32 +58,46 @@ class HomeProvider extends ChangeNotifier {
       if (kDebugMode) {
         print('-----User Profile Preview: $responseData');
       }
+      return responseData; // Return the fetched user profile data
     } else {
       // Handle error response
       if (kDebugMode) {
         print(
             '-----Failed to fetch user profile preview. Error: ${response.statusCode}');
       }
+      return null; // Return null in case of error
     }
   }
 
   //////////  update user //////////
 
-  Future<void> updateUserProfile() async {
+  updateUserProfile(
+      String token,
+      context,
+      String firstName,
+      String lastName,
+      String email,
+      String gender,
+      String DoB,
+      String address,
+      String city,
+      String haryana,
+      String pincode,
+      String language) async {
     // Create the payload
     final Map<String, dynamic> payload = {
-      "first_name": "Neeraj",
-      "last_name": "Kumar",
-      "email": "neeraj05rajput@gmail.com",
-      "gender": "male",
-      "date_of_birth": "1992-09-05",
+      "first_name": firstName,
+      "last_name": lastName,
+      "email": email,
+      "gender": gender,
+      "date_of_birth": DoB,
       "nationality": "Indian",
-      "address": "#234",
-      "city": "gurgaon",
-      "state": "haryana",
+      "address": address,
+      "city": city,
+      "state": haryana,
       "country": "india",
-      "pin_code": "122001",
-      "languages": ["english", "hindi", "punjabi"]
+      "pin_code": pincode,
+      "languages": language
     };
 
     // Convert the payload to JSON
@@ -78,6 +106,7 @@ class HomeProvider extends ChangeNotifier {
     // Set the headers
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
+      'token': token
     };
 
     try {
@@ -88,11 +117,19 @@ class HomeProvider extends ChangeNotifier {
         body: jsonPayload,
       );
 
+      print('----------updated-user-------------${response.body}');
       // Check the response status code
       if (response.statusCode == 200) {
         if (kDebugMode) {
           print('Profile updated successfully');
         }
+
+        AnimatedSnackBar.material(
+          'Profile updated successfully',
+          type: AnimatedSnackBarType.success,
+          duration: const Duration(seconds: 5),
+          mobileSnackBarPosition: MobileSnackBarPosition.top,
+        ).show(context);
       } else {
         if (kDebugMode) {
           print(
@@ -111,11 +148,9 @@ class HomeProvider extends ChangeNotifier {
 
   /////////   Send Email Verification Code /////////////
 
-  Future<void> sendEmail() async {
+  sendEmail(String email, String token) async {
     // Create the payload
-    final Map<String, dynamic> payload = {
-      "email_address": "neeraj05rajput@gmail.com"
-    };
+    final Map<String, dynamic> payload = {"email_address": email};
 
     // Convert the payload to JSON
     final String jsonPayload = jsonEncode(payload);
@@ -123,6 +158,7 @@ class HomeProvider extends ChangeNotifier {
     // Set the headers
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
+      'token': token
     };
 
     try {
@@ -133,6 +169,7 @@ class HomeProvider extends ChangeNotifier {
         body: jsonPayload,
       );
 
+      print('-----------send----email---code-----${response.body}');
       // Check the response status code
       if (response.statusCode == 200) {
         if (kDebugMode) {
@@ -155,12 +192,9 @@ class HomeProvider extends ChangeNotifier {
 
   ///////////  Verify Email with Code   ///////////
 
-  Future<void> verifyEmail() async {
+  Future<void> verifyEmail(String code, String email, String token) async {
     // Create the payload
-    final Map<String, dynamic> payload = {
-      "otp": "3625",
-      "email_address": "neeraj05rajput@gmail.com"
-    };
+    final Map<String, dynamic> payload = {"otp": code, "email_address": email};
 
     // Convert the payload to JSON
     final String jsonPayload = jsonEncode(payload);
@@ -168,6 +202,7 @@ class HomeProvider extends ChangeNotifier {
     // Set the headers
     final Map<String, String> headers = {
       'Content-Type': 'application/json',
+      'token': token
     };
 
     try {
@@ -177,7 +212,7 @@ class HomeProvider extends ChangeNotifier {
         headers: headers,
         body: jsonPayload,
       );
-
+      print('----------------verify-email-------${response.body}');
       // Check the response status code
       if (response.statusCode == 200) {
         if (kDebugMode) {
@@ -551,7 +586,7 @@ class HomeProvider extends ChangeNotifier {
       // Check the response status code
       if (response.statusCode == 200) {
         // Parse the response body
-        final List<dynamic> listOfConcerned = jsonDecode(response.body);
+        final Map<String, dynamic> listOfConcerned = jsonDecode(response.body);
         print('List of all concerned fetched successfully: $listOfConcerned');
       } else {
         print(
@@ -559,7 +594,7 @@ class HomeProvider extends ChangeNotifier {
         print('Response body: ${response.body}');
       }
     } catch (e) {
-      print('An error occurred: $e');
+      debugPrint('An error occurred: $e');
     }
   }
 }

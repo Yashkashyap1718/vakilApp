@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:animated_snack_bar/animated_snack_bar.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:vakil_app/screen/Admin_Screen/login.dart';
 import 'package:vakil_app/screen/Customer_Screen/Auth/otp.dart';
+import 'package:vakil_app/services/api_constant.dart';
 import 'package:vakil_app/utils/loadingWrapper.dart';
 
 import '../../../Provider/home_provider.dart';
@@ -77,7 +78,7 @@ class _MobileScreenState extends State<MobileScreen>
   }
 
   Future<void> sendSignInRequest(context, HomeProvider provider) async {
-    const String url = 'http://172.93.54.177:3001/users/signin';
+
     final Map<String, String> payload = {
       "country_code": "91",
       "mobile_number": _phoneController.text
@@ -86,7 +87,7 @@ class _MobileScreenState extends State<MobileScreen>
     try {
       provider.showLoader();
       final http.Response response = await http.post(
-        Uri.parse(url),
+        Uri.parse(baseURL + signInEndpoint),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -103,8 +104,6 @@ class _MobileScreenState extends State<MobileScreen>
                     )));
         final String msg = responseData['msg'];
 
-        AssetsAudioPlayer.newPlayer()
-            .open(Audio('vakilApp/assets/beap.mp3'), autoStart: true);
         AnimatedSnackBar.material(
           msg,
           type: AnimatedSnackBarType.success,

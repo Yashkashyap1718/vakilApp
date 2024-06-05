@@ -1,13 +1,10 @@
-import 'dart:io';
 
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vakil_app/constants/colors.dart';
 import 'package:vakil_app/constants/image.dart';
-import 'package:http/http.dart' as http;
 
 class DoctorDetails extends StatefulWidget {
   const DoctorDetails({super.key});

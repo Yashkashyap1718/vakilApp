@@ -36,7 +36,6 @@ class _OtpScreenState extends State<OtpScreen> {
   late Timer countdownTimer;
   int resendTime = 60;
 
-  final DatabaseProvider db = DatabaseProvider();
   // startTimer() {
   //   countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
   //     setState(() {
@@ -92,7 +91,11 @@ class _OtpScreenState extends State<OtpScreen> {
   // }
 
   Future<void> confirmOTP(
-      context, String otp, String phoneNumber, HomeProvider prrovider) async {
+    context,
+    String otp,
+    String phoneNumber,
+  ) async {
+    final prrovider = Provider.of<HomeProvider>(context, listen: false);
     final Map<String, String> payload = {
       "otp": otp,
       "mobile_number": phoneNumber
@@ -107,22 +110,30 @@ class _OtpScreenState extends State<OtpScreen> {
 
       final http.Response response = await http.post(
         Uri.parse(baseURL + confirmationEndpoint),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
+        headers: {
+          'Content-Type': 'application/json',
         },
         body: jsonEncode(payload),
       );
 
-      var data = jsonDecode(response.body);
+      final Map<String, dynamic> data = jsonDecode(response.body);
 
-      // print(response.body);
+      String token = data['token'];
 
-      String confirmToken = data['token'];
-      print(confirmToken);
+      print(response.body);
+
+      String confirmToken = token;
+      print("  -----response-----token-----------${confirmToken}");
+      prrovider.setAccessToken(confirmToken);
+      prrovider.setTempNumber(phoneNumber);
       if (response.statusCode == 200) {
-        UserModel user =
-            UserModel(phone: widget.phoneNumder, token: confirmToken);
-        db.addUser(user);
+        print(prrovider.accessToken);
+
+        final UserModel user = UserModel(accessToken: confirmToken);
+
+        final databaseProvider = DatabaseProvider();
+        await databaseProvider.insertUser(user);
+
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const HomeScreen()));
         AnimatedSnackBar.material(
@@ -150,13 +161,15 @@ class _OtpScreenState extends State<OtpScreen> {
     }
   }
 
-  Future<void> resendOTP(context, String phoneNumber) async {
+  Future<void> resendOTP(
+      context, String phoneNumber, HomeProvider provider) async {
     final Map<String, String> payload = {
       "country_code": '91',
       "mobile_number": phoneNumber
     };
 
     try {
+      provider.showLoader();
       final http.Response response = await http.post(
         Uri.parse(baseURL + resendOTPEndpoint),
         headers: <String, String>{
@@ -165,19 +178,27 @@ class _OtpScreenState extends State<OtpScreen> {
         body: jsonEncode(payload),
       );
 
+      // print(response.body);
+
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         final String msg = responseData['msg'];
+
         AnimatedSnackBar.material(
           msg,
           type: AnimatedSnackBarType.success,
           duration: const Duration(seconds: 5),
           mobileSnackBarPosition: MobileSnackBarPosition.top,
         ).show(context);
+        provider.hideLoader();
       } else {
         throw Exception('Failed to resend OTP');
       }
+
+      provider.hideLoader();
     } catch (e) {
+      provider.hideLoader();
+
       debugPrint('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -299,7 +320,9 @@ class _OtpScreenState extends State<OtpScreen> {
                       ),
                       TextButton(
                         onPressed: () async {
-                          await resendOTP(context, widget.phoneNumder);
+                          otpController.clear();
+                          await resendOTP(
+                              context, widget.phoneNumder, homeProvider);
                         },
                         child: const Text(
                           ' Resend',
@@ -332,7 +355,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         child: InkWell(
                           onTap: () async {
                             await confirmOTP(context, otpController.text,
-                                widget.phoneNumder, homeProvider);
+                                widget.phoneNumder);
                           },
                           child: Container(
                             height: 50,

@@ -1,75 +1,74 @@
 class UserModel {
-  final String? id;
-  final String? countryCode;
-  final String? phone;
-  final String? referralCode;
-  final bool? verified;
-  final String? otp;
-  final String? otpForgetPassword;
-  final String? role;
-  final String? token;
-  final String? pushNotification;
-  final int? createdAt;
-  final int? updatedAt;
-  final int? v;
-  final String? status;
-  final String? suspend;
+  int? id;
+  String? role;
+  String? firstName;
+  String? lastName;
+  String? email;
+  String? gender;
+  String? dateOfBirth;
+  String? nationality;
+  String? address;
+  String? city;
+  String? state;
+  String? country;
+  String? pinCode;
+  String? phone;
+  String? accessToken;
 
   UserModel({
     this.id,
-    this.countryCode,
-    this.phone,
-    this.referralCode,
-    this.verified,
-    this.otp,
-    this.otpForgetPassword,
     this.role,
-    this.token,
-    this.pushNotification,
-    this.createdAt,
-    this.updatedAt,
-    this.v,
-    this.status,
-    this.suspend,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.gender,
+    this.dateOfBirth,
+    this.nationality,
+    this.address,
+    this.city,
+    this.state,
+    this.country,
+    this.pinCode,
+    this.phone,
+    this.accessToken,
   });
 
   Map<String, dynamic> toMap() {
     return {
       '_id': id,
-      'country_code': countryCode,
-      'phone': phone,
-      'referral_code': referralCode,
-      'verified': verified,
-      'otp': otp,
-      'otpForgetPassword': otpForgetPassword,
-      'role': role,
-      'token': token,
-      'push_notification': pushNotification,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
-      '__v': v,
-      'status': status,
-      'suspend': suspend,
+      'role':role,
+      'token': accessToken,
+      'first_name': firstName,
+      'last_name': lastName,
+      'email': email,
+      'gender': gender,
+      'date_of_birth': dateOfBirth,
+      'nationality': nationality,
+      'address': address,
+      'city': city,
+      'state': state,
+      'country': country,
+      'pin_code': pinCode,
+      'phone': phone
     };
   }
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['_id'],
-      countryCode: json['country_code'],
-      phone: json['phone'],
-      referralCode: json['referral_code'],
-      verified: json['verified'],
-      otp: json['otp'],
-      otpForgetPassword: json['otpForgetPassword'],
-      role: json['role'],
-      token: json['token'],
-      pushNotification: json['push_notification'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
-      v: json['__v'],
-      status: json['status'],
-      suspend: json['suspend'],
-    );
+        id: json['_id'],
+        role: json['role'],
+        accessToken: json['token'],
+        firstName: json['first_name'],
+        lastName: json['last_name'],
+        email: json['email'],
+        gender: json['gender'],
+        dateOfBirth: json['date_of_birth'],
+        nationality: json['nationality'],
+        address: json['address'],
+        city: json['city'],
+        state: json['state'],
+        country: json['country'],
+        pinCode: json['pin_code'],
+        phone: json['phone']);
   }
 }

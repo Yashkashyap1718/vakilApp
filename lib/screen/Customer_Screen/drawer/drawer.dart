@@ -1,10 +1,19 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
+
+import 'package:animated_snack_bar/animated_snack_bar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:path_to_regexp/path_to_regexp.dart';
+import 'package:provider/provider.dart';
+import 'package:vakil_app/Provider/home_provider.dart';
 import 'package:vakil_app/constants/colors.dart';
 import 'package:vakil_app/model/user_model.dart';
+import 'package:vakil_app/routes/routes.dart';
+import 'package:vakil_app/screen/Customer_Screen/Edit%20Profile/edit_profile.dart';
+import 'package:vakil_app/services/api_constant.dart';
 import 'package:vakil_app/services/database_provider.dart';
-// import 'package:package_info_plus/package_info_plus.dart';
+
+import 'package:http/http.dart' as http;
 
 class MyDrawer extends StatefulWidget {
   MyDrawer({super.key});
@@ -58,59 +67,122 @@ class _MyDrawerState extends State<MyDrawer> {
   String appVersion = "v. 1.0";
 
   UserModel user = UserModel();
-  // DatabaseProvider db = DatabaseProvider();
+  DatabaseProvider db = DatabaseProvider();
+  bool isTokenFetched = false;
 
-  // getUser() {
-  //   db.getUsers().then(
-  //     (v) {
-  //       setState(() {
-  //         user = v;
-  //       });
-  //     },
-  //   );
-  // }
+  String phoneNumber = '';
+  fetchUserProfilePreview() async {
+    final token = Provider.of<HomeProvider>(context, listen: false).accessToken;
+    final response = await http.get(
+      Uri.parse(baseURL + getuserProfileEndpoint),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'token': token,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Handle success response
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      phoneNumber = responseData['data']['phone'];
+
+      final String role = responseData['data']['role'];
+
+      // print(phoneNumber);
+
+      final UserModel users = UserModel(phone: phoneNumber, role: role);
+
+      final database = DatabaseProvider();
+      await database.insertUser(users);
+      if (kDebugMode) {
+        print('-----User Profile Preview: $responseData');
+      }
+      return users; // Return the fetched user profile data
+    } else {
+      // Handle error response
+      if (kDebugMode) {
+        print(
+            '-----Failed to fetch user profile preview. Error: ${response.statusCode}');
+      }
+      return null; // Return null in case of error
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    // getUser();
-    // _fetchAppVersion();
+    fetchData();
   }
 
-  // Future<void> _fetchAppVersion() async {
-  //   PackageInfo packageInfo = await PackageInfo.fromPlatform();
-  //   setState(() {
-  //     appVersion = "v. ${packageInfo.version}";
-  //   });
-  // }
+  fetchData() async {
+    await fetchUserProfilePreview(); // Wait for user profile preview to fetch
+    getUser(); // Get the user after fetching the profile
+  }
+
+  getUser() async {
+    try {
+      final retrievedUser = await db.retrieveUserFromTable();
+      setState(() {
+        user = retrievedUser;
+        if (user != null) {
+          print('User phone: ${user.phone}');
+        } else {
+          print('User is null');
+        }
+      });
+    } catch (e) {
+      print('Error retrieving user from table: $e');
+    }
+  }
+
+//  getUserDetails(HomeProvider provider, String token) async {
+
+//     try {
+//      final  responsedata = await provider.fetchUserProfilePreview(token);
+//      var  data = jsonDecode(responsedata);
+// final phoneNumber = data['data']['phone'];
+
+//        role  = data['data']['role'];
+
+//        print(role);
+
+//      UserModel user = UserModel(
+//       phone: phoneNumber
+//      );
+
+// final database = DatabaseProvider();
+//      database.insertUser(user);
+
+//     } catch (e) {
+//       AnimatedSnackBar.material(
+//         e.toString(),
+//         type: AnimatedSnackBarType.success,
+//         duration: const Duration(seconds: 5),
+//         mobileSnackBarPosition: MobileSnackBarPosition.top,
+//       ).show(context);
+//     }
+
+//   }
 
   List<void Function()> onTapFunctions = [
-    () {
-      print('Tapped on item 0');
-    },
-    () {
-      print('Tapped on item 1');
-    },
-    () {
-      print('Tapped on item 2');
-    },
-    () {
-      print('Tapped on item 3');
-    },
-    () {
-      print('Tapped on item 4');
-    },
-    () {
-      print('Tapped on item 5');
-    },
-    () {
-      print('Tapped on item 6');
-    },
+    () {},
+    () {},
+    () {},
+    () {},
+    () {},
+    () {},
+    () {},
   ];
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
+    final provider = Provider.of<HomeProvider>(context, listen: false);
+
+
+
     return SafeArea(
       child: Drawer(
         child: Column(
@@ -129,40 +201,50 @@ class _MyDrawerState extends State<MyDrawer> {
                         backgroundColor: baseColor,
                         radius: size.height * .047,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
+                      Align(
+                        alignment: Alignment.center,
                         child: CircleAvatar(
                           backgroundColor: whiteColor,
-                          radius: size.height * .047,
+                          radius: size.height * .03,
                         ),
                       ),
                     ]),
                   ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            user.phone.toString(),
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                        ],
-                      ),
-                      const Text(
-                        'View and edit profile',
-                        style: TextStyle(
-                            color: Colors.lightBlue,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12),
-                      ),
-                      const Text(
-                        '9% completed',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const EditProfileScreen()));
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              provider.temUserPhoneNumber,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.black),
+                            ),
+                          ],
+                        ),
+                        const Text(
+                          'View and edit profile',
+                          style: TextStyle(
+                              color: Colors.lightBlue,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12),
+                        ),
+                        const Text(
+                          '9% completed',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ],
+                    ),
                   ),
                   const Icon(
                     Icons.arrow_forward_ios,
@@ -227,7 +309,30 @@ class _MyDrawerState extends State<MyDrawer> {
               itemBuilder: (context, index) {
                 return ListTile(
                   onTap: () {
-                    onTapFunctions[index]?.call();
+                    // onTapFunctions[index].call();
+
+                    switch (index) {
+                      case 0:
+                        break;
+                      case 1:
+                        break;
+                      case 2:
+                        break;
+                      case 3:
+                        break;
+                      case 4:
+                        break;
+                      case 5:
+                        break;
+
+                      case 6:
+                        showLogoutDialog(context);
+
+                        break;
+                      default:
+                        // Handle default case
+                        break;
+                    }
                   },
                   leading: drawerIcons[index],
                   title: Text(drawerTitle[index]),
@@ -250,5 +355,126 @@ class _MyDrawerState extends State<MyDrawer> {
         ),
       ),
     );
+  }
+
+  showLogoutDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: const Text(
+        "Cancel",
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+      ),
+      onPressed: () {
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+      },
+    );
+
+    Widget continueButton = TextButton(
+      child: const Text(
+        "Continue",
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      onPressed: () {
+        logoutUser();
+        Navigator.pop(context);
+      },
+    );
+    // set up the AlertDialog
+
+    AlertDialog alert = AlertDialog(
+      title: const Text("Confirm Logout"),
+      content: Text(
+        "${user.email}, Are you sure to logout from this device.",
+      ),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  logoutUser() async {
+    try {
+      await DatabaseProvider().cleanUserTable();
+
+      setState(() {
+        user = UserModel();
+      });
+
+      Navigator.pushNamedAndRemoveUntil(context, mobileRoute, (route) => false);
+
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            Widget continueButton = TextButton(
+              child: Container(
+                width: 70,
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(7)),
+                child: const Center(
+                  child: Text(
+                    "OK",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                  ),
+                ),
+              ),
+              onPressed: () async {
+                Navigator.pop(context);
+              },
+            );
+
+            return AlertDialog(
+              title: const Text("User logged out successfully!"),
+              actions: [continueButton],
+              actionsAlignment: MainAxisAlignment.center,
+            );
+          });
+    } catch (e) {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            Widget continueButton = TextButton(
+              child: Container(
+                width: 70,
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(7)),
+                child: const Center(
+                  child: Text(
+                    "OK",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
+                  ),
+                ),
+              ),
+              onPressed: () async {
+                Navigator.pop(context);
+              },
+            );
+
+            return AlertDialog(
+              title: const Text("Something went wrong, Try again later."),
+              actions: [continueButton],
+              actionsAlignment: MainAxisAlignment.center,
+            );
+          });
+
+      rethrow;
+    }
   }
 }

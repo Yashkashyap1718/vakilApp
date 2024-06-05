@@ -2,13 +2,13 @@ const String baseURL = "http://172.93.54.177:3001";
 
 //////////  Customer ////////
 
-const String signInEndpoint = "/users/signin"; //POST
-const String confirmationEndpoint = "/users/confirmation"; //POST
-const String resendOTPEndpoint = "/users/resendotp"; //POST
-const String getuserProfileEndpoint = "users/profile/preview"; //GET
-const String updateProfileEndpoint = "/users/profile/update"; //PUT
-const String sendEmailVerificationCode = "/users/profile/update"; //POST
-const String verifyEmailCodeEndpoint = "/users/profile/update"; //PUT
+const String signInEndpoint = "/advocate/signin"; //POST
+const String confirmationEndpoint = "/advocate/confirmation"; //POST
+const String resendOTPEndpoint = "/advocate/resendotp"; //POST
+const String getuserProfileEndpoint = "/advocate/profile/preview"; //GET
+const String updateProfileEndpoint = "/advocate/profile/update"; //PUT
+const String sendEmailVerificationCode = "/advocate/send/email"; //POST
+const String verifyEmailCodeEndpoint = "/advocate/verify/email"; //PUT
 
 /////////////  Admin //////////
 
