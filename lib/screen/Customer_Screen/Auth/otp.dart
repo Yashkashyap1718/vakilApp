@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vakil_app/model/user_model.dart';
 import 'package:vakil_app/services/api_constant.dart';
 import 'package:vakil_app/services/database_provider.dart';
@@ -89,8 +90,12 @@ class _OtpScreenState extends State<OtpScreen> {
   //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   //   }
   // }
+  Future<void> saveLoginStatus(bool isLoggedIn) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLoggedIn', isLoggedIn);
+  }
 
-  Future<void> confirmOTP(
+  confirmOTP(
     context,
     String otp,
     String phoneNumber,
@@ -118,22 +123,29 @@ class _OtpScreenState extends State<OtpScreen> {
 
       final Map<String, dynamic> data = jsonDecode(response.body);
 
-      String token = data['token'];
+      final String token = data['token'];
+      final String id = data['id'];
+      final String firstDigit = id.substring(0, 1);
+      final int firstDigitAsInt = int.parse(firstDigit, radix: 16);
+      // final String userId = data['_id'];
 
       print(response.body);
 
       String confirmToken = token;
-      print("  -----response-----token-----------${confirmToken}");
+      // print("  -----response-----token-----------${confirmToken}");
       prrovider.setAccessToken(confirmToken);
       prrovider.setTempNumber(phoneNumber);
       if (response.statusCode == 200) {
-        print(prrovider.accessToken);
-
-        final UserModel user = UserModel(accessToken: confirmToken);
+        final UserModel user = UserModel(
+          id: firstDigitAsInt,
+          accessToken: confirmToken,
+        );
 
         final databaseProvider = DatabaseProvider();
         await databaseProvider.insertUser(user);
-
+        print('-----user-id------${user.id}');
+        print('-----user-token------${user.accessToken}');
+        await saveLoginStatus(true);
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const HomeScreen()));
         AnimatedSnackBar.material(
@@ -152,7 +164,7 @@ class _OtpScreenState extends State<OtpScreen> {
     } catch (e) {
       prrovider.hideLoader();
 
-      debugPrint('Error: $e');
+      debugPrint('Error: during OTP confirmation----------- $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Error occurred while confirming OTP.'),

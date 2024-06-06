@@ -14,8 +14,14 @@ class HomeProvider extends ChangeNotifier {
   bool isLoading = false;
   late String _accessToken = '';
   late String temUserPhoneNumber = '';
+  late String userEmail = '';
 
   String get _temUserPhoneNumber => temUserPhoneNumber;
+  String get _userEmail => userEmail;
+
+  void setUserEmail(String email) {
+    userEmail = email;
+  }
 
   void setTempNumber(String number) {
     temUserPhoneNumber = number;
@@ -192,7 +198,7 @@ class HomeProvider extends ChangeNotifier {
 
   ///////////  Verify Email with Code   ///////////
 
-  Future<void> verifyEmail(String code, String email, String token) async {
+  verifyEmail(String code, String email, String token) async {
     // Create the payload
     final Map<String, dynamic> payload = {"otp": code, "email_address": email};
 

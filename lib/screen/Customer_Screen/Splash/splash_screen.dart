@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously, curly_braces_in_flow_control_structures, file_names
 
-
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,27 +15,24 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
-    Provider.of<HomeProvider>(context, listen: false);
+    final provider = Provider.of<HomeProvider>(context, listen: false);
 
     getSharedPref() async {
       final prefs = await SharedPreferences.getInstance();
       return prefs.getBool("isGuest");
     }
 
-  navigateNext() async {
-  final UserModel user = await DatabaseProvider().retrieveUserFromTable();
-  final bool isGuest = await getSharedPref() ?? false;
-  if (user.id != null || isGuest == true) {
-    Navigator.pushNamedAndRemoveUntil(
-        context, homeRoute, (Route<dynamic> route) => false);
-  } else {
-    Navigator.pushNamedAndRemoveUntil(
-        context, mobileRoute, (Route<dynamic> route) => false);
-  }
-}
-
-navigateNext();
-
+    navigateNext() async {
+      final UserModel user = await DatabaseProvider().retrieveUserFromTable();
+      final bool isGuest = await getSharedPref() ?? false;
+      if (user.id != null || isGuest == true) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, homeRoute, (Route<dynamic> route) => false);
+      } else {
+        Navigator.pushNamedAndRemoveUntil(
+            context, mobileRoute, (Route<dynamic> route) => false);
+      }
+    }
 
     navigateNext();
     return Container(

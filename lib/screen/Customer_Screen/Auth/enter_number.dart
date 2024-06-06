@@ -78,7 +78,6 @@ class _MobileScreenState extends State<MobileScreen>
   }
 
   Future<void> sendSignInRequest(context, HomeProvider provider) async {
-
     final Map<String, String> payload = {
       "country_code": "91",
       "mobile_number": _phoneController.text
@@ -134,6 +133,7 @@ class _MobileScreenState extends State<MobileScreen>
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return LoadingWrapper(
       child: Scaffold(
         body: Consumer<HomeProvider>(
@@ -279,7 +279,7 @@ class _MobileScreenState extends State<MobileScreen>
                                                 const AdminLoginPage()));
                                   },
                                   child: const Text(
-                                    'Registeer with Advocate',
+                                    'Register with Advocate',
                                     style: TextStyle(
                                         color: Colors.blue,
                                         fontStyle: FontStyle.italic),

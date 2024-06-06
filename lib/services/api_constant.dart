@@ -2,25 +2,26 @@ const String baseURL = "http://172.93.54.177:3001";
 
 //////////  Customer ////////
 
-const String signInEndpoint = "/advocate/signin"; //POST
-const String confirmationEndpoint = "/advocate/confirmation"; //POST
-const String resendOTPEndpoint = "/advocate/resendotp"; //POST
-const String getuserProfileEndpoint = "/advocate/profile/preview"; //GET
-const String updateProfileEndpoint = "/advocate/profile/update"; //PUT
-const String sendEmailVerificationCode = "/advocate/send/email"; //POST
-const String verifyEmailCodeEndpoint = "/advocate/verify/email"; //PUT
+const String signInEndpoint = "/users/signin"; //POST
+const String confirmationEndpoint = "/users/confirmation"; //POST
+const String resendOTPEndpoint = "/users/resendotp"; //POST
+const String getuserProfileEndpoint = "/users/profile/preview"; //GET
+const String updateProfileEndpoint = "/users/profile/update"; //PUT
+const String sendEmailVerificationCode = "/users/send/email"; //POST
+const String verifyEmailCodeEndpoint = "/users/verify/email"; //PUT
 
-/////////////  Admin //////////
+/////////////  Advocate //////////
 
-const String adminSignInEndpoint = "/admin/signin"; //POST
-const String adminConfirmationEndpoint = "/admin/confirmation"; //POST
-const String adminUserProfileEndpoint = "/admin/profile/preview"; //GET
-const String adminUpdateProfile = "/admin/profile/update"; //PUT
-const String adminAddCategoryEndpoint = "/admin/category/create"; //POST
-const String adminCategoryListEndpoint = "/admin/categories"; //GET
-const String adminAddSubCategoryEndpoint = "/admin/subcategory/create"; //POST
-const String adminSubCategoryListEndpoint = "/admin/profile/update"; //GET
+const String adminSignInEndpoint = "/advocate/signin"; //POST
+const String adminConfirmationEndpoint = "/advocate/confirmation"; //POST
+const String adminUserProfileEndpoint = "/advocate/profile/preview"; //GET
+const String adminUpdateProfile = "/advocate/profile/update"; //PUT
+const String adminAddCategoryEndpoint = "/advocate/category/create"; //POST
+const String adminCategoryListEndpoint = "/advocate/categories"; //GET
+const String adminAddSubCategoryEndpoint =
+    "/advocate/subcategory/create"; //POST
+const String adminSubCategoryListEndpoint = "/advocate/profile/update"; //GET
 
 //////////// without Token   /////////////
 
-const String landingPageEndpoint = "/admin/subcategories";  //GET
+const String landingPageEndpoint = "/list_of_all_concerned";  //GET

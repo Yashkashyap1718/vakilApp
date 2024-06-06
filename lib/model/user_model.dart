@@ -1,19 +1,19 @@
 class UserModel {
-  int? id;
-  String? role;
-  String? firstName;
-  String? lastName;
-  String? email;
-  String? gender;
-  String? dateOfBirth;
-  String? nationality;
-  String? address;
-  String? city;
-  String? state;
-  String? country;
-  String? pinCode;
-  String? phone;
-  String? accessToken;
+  final int? id;
+  final String? role;
+  final String? firstName;
+  final String? lastName;
+  final String? email;
+  final String? gender;
+  final String? dateOfBirth;
+  final String? nationality;
+  final String? address;
+  final String? city;
+  final String? state;
+  final String? country;
+  final String? pinCode;
+  final String? phone;
+  final String? accessToken;
 
   UserModel({
     this.id,
@@ -36,7 +36,7 @@ class UserModel {
   Map<String, dynamic> toMap() {
     return {
       '_id': id,
-      'role':role,
+      'role': role,
       'token': accessToken,
       'first_name': firstName,
       'last_name': lastName,
@@ -55,20 +55,20 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-        id: json['_id'],
-        role: json['role'],
-        accessToken: json['token'],
-        firstName: json['first_name'],
-        lastName: json['last_name'],
-        email: json['email'],
-        gender: json['gender'],
-        dateOfBirth: json['date_of_birth'],
-        nationality: json['nationality'],
-        address: json['address'],
-        city: json['city'],
-        state: json['state'],
-        country: json['country'],
-        pinCode: json['pin_code'],
-        phone: json['phone']);
+        id: json['_id'] ?? 1,
+        role: json['role'] ?? "",
+        accessToken: json['token'] ?? "",
+        firstName: json['first_name'] ?? "",
+        lastName: json['last_name'] ?? "",
+        email: json['email'] ?? "",
+        gender: json['gender'] ?? "",
+        dateOfBirth: json['date_of_birth'] ?? "",
+        nationality: json['nationality'] ?? "",
+        address: json['address'] ?? "",
+        city: json['city'] ?? "",
+        state: json['state'] ?? "",
+        country: json['country'] ?? "",
+        pinCode: json['pin_code'] ?? "",
+        phone: json['phone'] ?? "");
   }
 }

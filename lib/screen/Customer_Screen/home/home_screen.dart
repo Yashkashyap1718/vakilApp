@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final provider = Provider.of<HomeProvider>(context, listen: false);
 
     super.initState();
-    // getUser();
+    getUser();
     _focusNode = FocusNode();
 
     // print('------token------${provider.accessToken}');
@@ -111,6 +111,15 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       return null; // Return null in case of error
     }
+  }
+
+  DatabaseProvider db = DatabaseProvider();
+  getUser() async {
+    await db.retrieveUserFromTable().then((value) {
+      setState(() {
+        user = value;
+      });
+    });
   }
 
   @override

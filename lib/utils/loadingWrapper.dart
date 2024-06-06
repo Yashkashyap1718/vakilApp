@@ -40,7 +40,7 @@ class LoadingWrapper extends StatelessWidget {
                         borderRadius: BorderRadius.all(Radius.circular(5)),
                       ),
                       padding: const EdgeInsets.all(32),
-                      child: const CircularProgressIndicator(color: baseColor),
+                      child: const CircularProgressIndicator(color: whiteColor),
                     ),
                   ),
                 ),

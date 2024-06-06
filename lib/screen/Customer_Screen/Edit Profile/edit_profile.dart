@@ -67,7 +67,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           context,
           _firstNameController.text,
           _lastNameController.text,
-          _emailController.text,
+          provider.userEmail,
           _selectedGender,
           _dobController.text,
           _addressController.text,
@@ -87,6 +87,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       print(e);
     }
   }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   final provider = Provider.of<HomeProvider>(context, listen: false);
+  //   // Check if provider.userEmail is nullable
+  //   _emailController = TextEditingController(text: provider.userEmail);
+  // }
+
+  // @override
+  // void dispose() {
+  //   _emailController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -175,6 +189,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   height: 10,
                 ),
                 TextFormField(
+                  // initialValue: _emailController == null ? "" : "",
                   controller: _emailController,
                   decoration: const InputDecoration(
                     labelText: 'Email',
@@ -184,7 +199,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your email';
                     }
-                    // You can add more email validation logic here if needed
+
                     return null;
                   },
                   onTap: () {

@@ -86,15 +86,32 @@ class _MyDrawerState extends State<MyDrawer> {
       final Map<String, dynamic> responseData = jsonDecode(response.body);
 
       phoneNumber = responseData['data']['phone'];
-
-      final String role = responseData['data']['role'];
-
+      final String id = responseData['data']['_id'];
+      final String firstDigit = id.substring(0, 1);
+      final int firstDigitAsInt = int.parse(firstDigit, radix: 16);
       // print(phoneNumber);
 
-      final UserModel users = UserModel(phone: phoneNumber, role: role);
+      final UserModel users = UserModel(
+          id: firstDigitAsInt,
+          phone: responseData['data']['phone'],
+          role: responseData['data']['role'],
+          firstName: responseData['data']['first_name'],
+          lastName: responseData['data']['last_name'],
+          email: responseData['data']['email'],
+          address: responseData['data']['address'],
+          city: responseData['data']['city'],
+          state: responseData['data']['state'],
+          gender: responseData['data']['gender'],
+          dateOfBirth: responseData['data']['date_of_birth'],
+          country: responseData['data']['country'],
+          nationality: responseData['data']['nationality'],
+          pinCode: responseData['data']['pin_code']);
 
       final database = DatabaseProvider();
+
       await database.insertUser(users);
+
+      print(user.phone);
       if (kDebugMode) {
         print('-----User Profile Preview: $responseData');
       }
@@ -121,21 +138,12 @@ class _MyDrawerState extends State<MyDrawer> {
   }
 
   getUser() async {
-    try {
-      final retrievedUser = await db.retrieveUserFromTable();
+    await db.retrieveUserFromTable().then((value) {
       setState(() {
-        user = retrievedUser;
-        if (user != null) {
-          print('User phone: ${user.phone}');
-        } else {
-          print('User is null');
-        }
+        user = value;
       });
-    } catch (e) {
-      print('Error retrieving user from table: $e');
-    }
+    });
   }
-
 //  getUserDetails(HomeProvider provider, String token) async {
 
 //     try {
@@ -179,10 +187,6 @@ class _MyDrawerState extends State<MyDrawer> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    final provider = Provider.of<HomeProvider>(context, listen: false);
-
-
-
     return SafeArea(
       child: Drawer(
         child: Column(
@@ -224,7 +228,7 @@ class _MyDrawerState extends State<MyDrawer> {
                         Row(
                           children: [
                             Text(
-                              provider.temUserPhoneNumber,
+                              user.email.toString(),
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -402,7 +406,7 @@ class _MyDrawerState extends State<MyDrawer> {
 
   logoutUser() async {
     try {
-      await DatabaseProvider().cleanUserTable();
+      await DatabaseProvider().clearUserTable();
 
       setState(() {
         user = UserModel();
