@@ -261,12 +261,13 @@ class HomeProvider extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => OtpScreen(
-                      phoneNumder: phone,
-                    )));
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => OtpScreen(
+        //               phoneNumder: phone,
+
+        //             )));
         final String msg = responseData['msg'];
 
         AssetsAudioPlayer.newPlayer()

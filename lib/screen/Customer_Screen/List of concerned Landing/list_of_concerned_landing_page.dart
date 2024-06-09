@@ -6,6 +6,7 @@ import 'package:vakil_app/Provider/home_provider.dart';
 import 'package:vakil_app/constants/colors.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:vakil_app/screen/Customer_Screen/Appointment%20details/appointment_details.dart';
 import 'package:vakil_app/services/api_constant.dart';
 
 class ListOfConcernedUserLandingPage extends StatefulWidget {
@@ -162,12 +163,21 @@ class _ListOfConcernedUserLandingPageState
               shrinkWrap: true,
               itemCount: landName.length,
               itemBuilder: (BuildContext context, index) {
-                return Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(width: 0.5)),
-                  child: Column(
-                    children: [Text(landName[index])],
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const AppointmentDetailsScreen()));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(width: 0.5)),
+                    child: Column(
+                      children: [Text(landName[index])],
+                    ),
                   ),
                 );
               })

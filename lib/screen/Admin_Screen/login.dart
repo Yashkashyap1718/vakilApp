@@ -6,8 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:vakil_app/Provider/home_provider.dart';
+import 'package:vakil_app/constants/colors.dart';
+import 'package:vakil_app/model/user_model.dart';
 import 'package:vakil_app/screen/role_choose.dart';
 import 'package:vakil_app/services/api_constant.dart';
+import 'package:vakil_app/services/database_provider.dart';
 import 'package:vakil_app/utils/loadingWrapper.dart';
 
 import '../Customer_Screen/home/home_screen.dart';
@@ -100,8 +103,13 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
       // print(response.body);
 
       String confirmToken = data['token'];
+
+      String role = data['role'];
       print(confirmToken);
       if (response.statusCode == 200) {
+        final UserModel user = UserModel(role: role);
+        final database = DatabaseProvider();
+        await database.insertUser(user);
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const HomeScreen()));
         AnimatedSnackBar.material(
@@ -131,10 +139,26 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return LoadingWrapper(
       child: Scaffold(
+        backgroundColor: baseColor,
         appBar: AppBar(
-          title: const Text('Admin Login'),
+          backgroundColor: baseColor,
+          title: const Text(
+            'Admin Login',
+            style: TextStyle(color: whiteColor),
+          ),
+          leading: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(
+                Icons.arrow_back_outlined,
+                color: whiteColor,
+              )),
+          shadowColor: whiteColor,
+          elevation: .5,
         ),
         body: Consumer<HomeProvider>(
           builder: (_, provider, __) {
@@ -145,36 +169,58 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextFormField(
-                      controller: _phoneNumberController,
-                      decoration: const InputDecoration(
-                        labelText: 'Phone Number',
+                    Container(
+                      height: 50,
+                      width: size.width,
+                      decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          border: Border.all(
+                              color: const Color.fromARGB(135, 179, 177, 177)),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: TextFormField(
+                        controller: _phoneNumberController,
+                        decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.all(8),
+                          enabledBorder: InputBorder.none,
+                          hintText: 'Phone Number',
+                        ),
+                        keyboardType: TextInputType.phone,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter your phone number';
+                          }
+                          return null;
+                        },
                       ),
-                      keyboardType: TextInputType.phone,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter your phone number';
-                        }
-                        return null;
-                      },
                     ),
                     if (_showOtpField)
                       Column(
                         children: [
                           const SizedBox(height: 20),
-                          TextFormField(
-                            controller: _otpController,
-                            decoration: const InputDecoration(
-                              labelText: 'OTP',
+                          Container(
+                            height: 50,
+                            width: size.width,
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 255, 255, 255),
+                                border: Border.all(
+                                    color: const Color.fromARGB(
+                                        135, 179, 177, 177)),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: TextFormField(
+                              controller: _otpController,
+                              decoration: const InputDecoration(
+                                enabledBorder: InputBorder.none,
+                                labelText: 'OTP',
+                              ),
+                              keyboardType: TextInputType.number,
+                              obscureText: true,
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Please enter OTP';
+                                }
+                                return null;
+                              },
                             ),
-                            keyboardType: TextInputType.number,
-                            obscureText: true,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter OTP';
-                              }
-                              return null;
-                            },
                           ),
                         ],
                       ),

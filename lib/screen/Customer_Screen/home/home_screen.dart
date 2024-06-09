@@ -239,8 +239,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () {
                             switch (index) {
                               case 0:
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=> ListOfConcernedUserLandingPage()));
-                                
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ListOfConcernedUserLandingPage()));
+
                                 break;
                               case 1:
                                 Navigator.push(
@@ -271,7 +275,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Container(
                                   height: size.height * .19,
                                   width: double.infinity,
-                                  color: Colors.amber,
+                                  color: user.role == 'advocate'
+                                      ? Colors.amber
+                                      : Colors.green,
                                   child: Image.asset(
                                     gridImages[index],
                                     // scale: 1,
@@ -385,7 +391,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 25),
-                    child: Image.asset(bannerImg, fit: BoxFit.cover,),
+                    child: Image.asset(
+                      bannerImg,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   SizedBox(
                     height: size.height * .35,

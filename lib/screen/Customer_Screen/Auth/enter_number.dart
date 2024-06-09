@@ -95,13 +95,19 @@ class _MobileScreenState extends State<MobileScreen>
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = jsonDecode(response.body);
+        final String msg = responseData['msg'];
+
+        final List<String> parts = msg.split(','); // Split the string by ','
+        final String otp = parts.first.trim();
+
+        print(otp);
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => OtpScreen(
                       phoneNumder: _phoneController.text,
+                      oTP: otp,
                     )));
-        final String msg = responseData['msg'];
 
         AnimatedSnackBar.material(
           msg,

@@ -189,8 +189,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   height: 10,
                 ),
                 TextFormField(
-                  // initialValue: _emailController == null ? "" : "",
-                  controller: _emailController,
+                  initialValue: _emailController == null
+                      ? "Hello"
+                      : _emailController.text,
+                  // controller: _emailController,
                   decoration: const InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(),

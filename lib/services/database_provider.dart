@@ -30,7 +30,8 @@ class DatabaseProvider {
       pin_code TEXT,
       country TEXT,
       state TEXT,
-      phone TEXT
+      phone TEXT,
+      role TEXT
     )
     ''',
         );

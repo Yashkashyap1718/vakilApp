@@ -28,20 +28,20 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
-        theme: ThemeData(
-            // appBarTheme: const AppBarTheme(
-            //     backgroundColor: baseColor,
-            //     iconTheme: IconThemeData(color: whiteColor),
-            //     titleTextStyle: TextStyle(color: whiteColor, fontSize: 18)),
-            useMaterial3: true,
-            fontFamily: GoogleFonts.lato().fontFamily),
-        // home: const HomeScreen()
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          theme: ThemeData(
+              // appBarTheme: const AppBarTheme(
+              //     backgroundColor: baseColor,
+              //     iconTheme: IconThemeData(color: whiteColor),
+              //     titleTextStyle: TextStyle(color: whiteColor, fontSize: 18)),
+              useMaterial3: true,
+              fontFamily: GoogleFonts.lato().fontFamily),
+          home: const HomeScreen()
 
-        initialRoute: initialRoute,
-        routes: routes,
-      ),
+          // initialRoute: initialRoute,
+          // routes: routes,
+          ),
     );
   }
 }

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,9 +20,11 @@ import '../home/home_screen.dart';
 import 'package:http/http.dart' as http;
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key, required this.phoneNumder});
+  const OtpScreen({super.key, required this.phoneNumder, required this.oTP});
 
   final String phoneNumder;
+
+  final String oTP;
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -37,149 +40,96 @@ class _OtpScreenState extends State<OtpScreen> {
   late Timer countdownTimer;
   int resendTime = 60;
 
-  // startTimer() {
-  //   countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-  //     setState(() {
-  //       resendTime = resendTime - 1;
-  //     });
-  //     if (resendTime < 1) {
-  //       stopTimer();
-  //     }
-  //   });
-  // }
-
-  // stopTimer() {
-  //   if (countdownTimer.isActive) {
-  //     countdownTimer.cancel();
-  //   }
-  // }
-
-  // @override
-  // void initState() {
-  //   startTimer();
-
-  //   super.initState();
-  // }
-  // void resendOtp() async {
-  //   try {
-  //     await FirebaseAuth.instance.verifyPhoneNumber(
-  //       phoneNumber: phoneNumber,
-  //       verificationCompleted: (PhoneAuthCredential credential) {
-  //         Navigator.pushReplacementNamed(context, tabsRoute);
-  //       },
-  //       verificationFailed: (FirebaseAuthException e) {
-  //         SnackBar snackBar = const SnackBar(
-  //             content: Text("Something went wrong, pleaes try again later"));
-  //         if (e.code == 'too-many-requests') {
-  //           snackBar = const SnackBar(
-  //             content: Text('Too Many Attempts'),
-  //           );
-  //         } else {
-  //           snackBar = const SnackBar(
-  //             content: Text('Something Went Wrong, Try Again later.'),
-  //           );
-  //         }
-  //         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  //       },
-  //       codeSent: (String verificationId, int? resendToken) {},
-  //       codeAutoRetrievalTimeout: (String verificationId) {},
-  //     );
-  //   } catch (e) {
-  //     SnackBar snackBar = const SnackBar(
-  //         content: Text("Something went wrong, pleaes try again later"));
-  //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  //   }
-  // }
   Future<void> saveLoginStatus(bool isLoggedIn) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isLoggedIn', isLoggedIn);
   }
 
-confirmOTP( context, String otp, String phoneNumber) async {
-  final prrovider = Provider.of<HomeProvider>(context, listen: false);
-  
-  // Check if otp or phoneNumber is null
-  if (otp == null || phoneNumber == null) {
-    debugPrint('Error: OTP or phone number is null');
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error: OTP or phone number is null'),
-      ),
-    );
-    return;
-  }
+  confirmOTP(context, String otp, String phoneNumber) async {
+    final prrovider = Provider.of<HomeProvider>(context, listen: false);
 
-  final Map<String, String> payload = {
-    "otp": otp,
-    "mobile_number": phoneNumber
-  };
-
-  if (kDebugMode) {
-    print(payload);
-  }
-
-  try {
-    prrovider.showLoader();
-
-    final http.Response response = await http.post(
-      Uri.parse(baseURL + confirmationEndpoint),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode(payload),
-    );
-
-    final Map<String, dynamic> data = jsonDecode(response.body);
-
-    final String token = data['token'];
-    final String id = data['id'];
-    final String firstDigit = id.substring(0, 1);
-    final int firstDigitAsInt = int.parse(firstDigit, radix: 16);
-    // final String userId = data['_id'];
-
-    print(response.body);
-
-    String confirmToken = token;
-    // print("  -----response-----token-----------${confirmToken}");
-    prrovider.setAccessToken(confirmToken);
-    prrovider.setTempNumber(phoneNumber);
-    if (response.statusCode == 200) {
-      final UserModel user = UserModel(
-        id: firstDigitAsInt,
-        accessToken: confirmToken,
+    // Check if otp or phoneNumber is null
+    if (otp == null || phoneNumber == null) {
+      debugPrint('Error: OTP or phone number is null');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error: OTP or phone number is null'),
+        ),
       );
-
-      final databaseProvider = DatabaseProvider();
-      await databaseProvider.insertUser(user);
-      print('-----user-id------${user.id}');
-      print('-----user-token------${user.accessToken}');
-      await saveLoginStatus(true);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()));
-      AnimatedSnackBar.material(
-        'Welcome! User $phoneNumber',
-        type: AnimatedSnackBarType.success,
-        duration: const Duration(seconds: 5),
-        mobileSnackBarPosition: MobileSnackBarPosition.top,
-      ).show(context);
-
-      prrovider.hideLoader();
-    } else {
-      throw Exception('Failed to confirm OTP');
+      return;
     }
 
-    prrovider.hideLoader();
-  } catch (e) {
-    prrovider.hideLoader();
+    final Map<String, String> payload = {
+      "otp": otp,
+      "mobile_number": phoneNumber
+    };
 
-    debugPrint('Error: during OTP confirmation----------- $e');
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error occurred while confirming OTP.'),
-      ),
-    );
+    if (kDebugMode) {
+      print(payload);
+    }
+
+    try {
+      prrovider.showLoader();
+
+      final http.Response response = await http.post(
+        Uri.parse(baseURL + confirmationEndpoint),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(payload),
+      );
+
+      final Map<String, dynamic> data = jsonDecode(response.body);
+
+      final String token = data['token'];
+      final String id = data['id'];
+      final String firstDigit = id.substring(0, 1);
+      final int firstDigitAsInt = int.parse(firstDigit, radix: 16);
+      // final String userId = data['_id'];
+
+      print(response.body);
+
+      String confirmToken = token;
+      // print("  -----response-----token-----------${confirmToken}");
+      prrovider.setAccessToken(confirmToken);
+      prrovider.setTempNumber(phoneNumber);
+      if (response.statusCode == 200) {
+        final UserModel user = UserModel(
+          id: firstDigitAsInt,
+          accessToken: confirmToken,
+        );
+
+        final databaseProvider = DatabaseProvider();
+        await databaseProvider.insertUser(user);
+        print('-----user-id------${user.id}');
+        print('-----user-token------${user.accessToken}');
+        await saveLoginStatus(true);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
+        AnimatedSnackBar.material(
+          'Welcome! User $phoneNumber',
+          type: AnimatedSnackBarType.success,
+          duration: const Duration(seconds: 5),
+          mobileSnackBarPosition: MobileSnackBarPosition.top,
+        ).show(context);
+
+        prrovider.hideLoader();
+      } else {
+        throw Exception('Failed to confirm OTP');
+      }
+
+      prrovider.hideLoader();
+    } catch (e) {
+      prrovider.hideLoader();
+
+      debugPrint('Error: during OTP confirmation----------- $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error occurred while confirming OTP.'),
+        ),
+      );
+    }
   }
-}
 
   Future<void> resendOTP(
       context, String phoneNumber, HomeProvider provider) async {
@@ -226,6 +176,22 @@ confirmOTP( context, String otp, String phoneNumber) async {
         ),
       );
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      String receiveOTP = widget.oTP;
+      otpController.text = receiveOTP;
+
+      continueButtonTap();
+    });
+  }
+
+  void continueButtonTap() async {
+    await confirmOTP(context, otpController.text, widget.phoneNumder);
   }
 
   @override

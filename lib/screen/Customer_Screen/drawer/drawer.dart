@@ -25,11 +25,11 @@ class MyDrawer extends StatefulWidget {
 class _MyDrawerState extends State<MyDrawer> {
   final drawerTitle = [
     'Home',
-    'Home',
-    'Home',
-    'Home',
-    'Home',
-    'Home',
+    'Appoinments',
+    'Consultations',
+    'My Lawer',
+    'Help Center',
+    'Like us?Give us 5 stars',
     'Log Out',
   ];
 
@@ -173,16 +173,6 @@ class _MyDrawerState extends State<MyDrawer> {
 
 //   }
 
-  List<void Function()> onTapFunctions = [
-    () {},
-    () {},
-    () {},
-    () {},
-    () {},
-    () {},
-    () {},
-  ];
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -200,19 +190,10 @@ class _MyDrawerState extends State<MyDrawer> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(10),
-                    child: Stack(children: [
-                      CircleAvatar(
-                        backgroundColor: baseColor,
-                        radius: size.height * .047,
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: CircleAvatar(
-                          backgroundColor: whiteColor,
-                          radius: size.height * .03,
-                        ),
-                      ),
-                    ]),
+                    child: CircleAvatar(
+                      backgroundColor: baseColor,
+                      radius: size.height * .047,
+                    ),
                   ),
                   InkWell(
                     onTap: () {
@@ -228,7 +209,7 @@ class _MyDrawerState extends State<MyDrawer> {
                         Row(
                           children: [
                             Text(
-                              user.email.toString(),
+                              user.phone ?? 'Guest',
                               style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
@@ -273,7 +254,7 @@ class _MyDrawerState extends State<MyDrawer> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const Text('Practo  '),
+                          const Text('AdvoHub  '),
                           Container(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 3, vertical: 1),
@@ -292,7 +273,7 @@ class _MyDrawerState extends State<MyDrawer> {
                           )
                         ],
                       ),
-                      const Text('Health Plan for you famiy')
+                      const Text('Get Plan for you quick')
                     ],
                   ),
                   const Icon(
@@ -317,6 +298,7 @@ class _MyDrawerState extends State<MyDrawer> {
 
                     switch (index) {
                       case 0:
+                        Navigator.of(context).pop();
                         break;
                       case 1:
                         break;

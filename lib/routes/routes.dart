@@ -22,14 +22,14 @@ final routes = {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     // final verificationId = args['verficationId'];
     final phoneNumber = args['phoneNumber'];
+    final otp = args['otp'];
     return OtpScreen(
       phoneNumder: phoneNumber,
+      oTP: otp,
     );
   },
   homeRoute: (context) => HomeScreen(),
   editProfileRoute: (context) => EditProfileScreen(),
-  listofConcernedUserLandingPageRoute: (context) => ListOfConcernedUserLandingPage(),
-
-
-
+  listofConcernedUserLandingPageRoute: (context) =>
+      ListOfConcernedUserLandingPage(),
 };
