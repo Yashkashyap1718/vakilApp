@@ -10,6 +10,7 @@ import 'package:vakil_app/Provider/home_provider.dart';
 import 'package:vakil_app/model/user_model.dart';
 import 'package:vakil_app/routes/routes.dart';
 import 'package:vakil_app/screen/Customer_Screen/Appointment%20details/appointment_details.dart';
+import 'package:vakil_app/screen/Customer_Screen/List%20of%20concerned%20Landing/list_of_concerned_landing_page.dart';
 import 'package:vakil_app/screen/Customer_Screen/drawer/drawer.dart';
 import 'package:vakil_app/screen/Customer_Screen/video_consult/video_consult.dart';
 import 'package:vakil_app/services/api_constant.dart';
@@ -238,12 +239,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () {
                             switch (index) {
                               case 0:
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const AppointmentDetailsScreen()),
-                                );
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=> ListOfConcernedUserLandingPage()));
+                                
                                 break;
                               case 1:
                                 Navigator.push(
@@ -388,7 +385,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 25),
-                    child: Image.asset(bannerImg),
+                    child: Image.asset(bannerImg, fit: BoxFit.cover,),
                   ),
                   SizedBox(
                     height: size.height * .35,
@@ -511,7 +508,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Find Doctor's Available Near You",
+                        "Find Lawer's Available Near You",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -557,7 +554,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Dr. Leelamohan PVR',
+                                          'Lawer Leelamohan PVR',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
@@ -596,7 +593,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Dr. Leelamohan PVR',
+                                          'Lawer Leelamohan PVR',
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold),
                                         ),
@@ -629,7 +626,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: OutlinedButton(
                   onPressed: () {},
                   child: const Center(
-                    child: Text('See All Doctor'),
+                    child: Text('See All Lawer'),
                   )),
             ),
             Container(

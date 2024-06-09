@@ -192,7 +192,7 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                                           Row(
                                             children: [
                                               Text(
-                                                'Dr. Leelamohan PVR',
+                                                'Lawer Leelamohan',
                                                 style: TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -206,7 +206,7 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                                               )
                                             ],
                                           ),
-                                          Text('General Physician'),
+                                          Text('Corporate Lawyer'),
                                           Text('HSR Layout'),
                                           Row(
                                             children: [
@@ -241,7 +241,7 @@ class _AppointmentDetailsScreenState extends State<AppointmentDetailsScreen> {
                                           ),
                                           TextSpan(
                                             text:
-                                                ' Srushi Gasroo & Liverr Clinic',
+                                                ' deal with legal concerns',
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: Colors.black54,

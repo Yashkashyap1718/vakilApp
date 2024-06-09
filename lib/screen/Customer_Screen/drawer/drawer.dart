@@ -71,71 +71,71 @@ class _MyDrawerState extends State<MyDrawer> {
   bool isTokenFetched = false;
 
   String phoneNumber = '';
-  fetchUserProfilePreview() async {
-    final token = Provider.of<HomeProvider>(context, listen: false).accessToken;
-    final response = await http.get(
-      Uri.parse(baseURL + getuserProfileEndpoint),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'token': token,
-      },
-    );
+  // fetchUserProfilePreview() async {
+  //   final token = Provider.of<HomeProvider>(context, listen: false).accessToken;
+  //   final response = await http.get(
+  //     Uri.parse(baseURL + getuserProfileEndpoint),
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //       'token': token,
+  //     },
+  //   );
 
-    if (response.statusCode == 200) {
-      // Handle success response
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
+  //   if (response.statusCode == 200) {
+  //     // Handle success response
+  //     final Map<String, dynamic> responseData = jsonDecode(response.body);
 
-      phoneNumber = responseData['data']['phone'];
-      final String id = responseData['data']['_id'];
-      final String firstDigit = id.substring(0, 1);
-      final int firstDigitAsInt = int.parse(firstDigit, radix: 16);
-      // print(phoneNumber);
+  //     phoneNumber = responseData['data']['phone'];
+  //     final String id = responseData['data']['_id'];
+  //     final String firstDigit = id.substring(0, 1);
+  //     final int firstDigitAsInt = int.parse(firstDigit, radix: 16);
+  //     // print(phoneNumber);
 
-      final UserModel users = UserModel(
-          id: firstDigitAsInt,
-          phone: responseData['data']['phone'],
-          role: responseData['data']['role'],
-          firstName: responseData['data']['first_name'],
-          lastName: responseData['data']['last_name'],
-          email: responseData['data']['email'],
-          address: responseData['data']['address'],
-          city: responseData['data']['city'],
-          state: responseData['data']['state'],
-          gender: responseData['data']['gender'],
-          dateOfBirth: responseData['data']['date_of_birth'],
-          country: responseData['data']['country'],
-          nationality: responseData['data']['nationality'],
-          pinCode: responseData['data']['pin_code']);
+  //     final UserModel users = UserModel(
+  //         id: firstDigitAsInt,
+  //         phone: responseData['data']['phone'],
+  //         role: responseData['data']['role'],
+  //         firstName: responseData['data']['first_name'],
+  //         lastName: responseData['data']['last_name'],
+  //         email: responseData['data']['email'],
+  //         address: responseData['data']['address'],
+  //         city: responseData['data']['city'],
+  //         state: responseData['data']['state'],
+  //         gender: responseData['data']['gender'],
+  //         dateOfBirth: responseData['data']['date_of_birth'],
+  //         country: responseData['data']['country'],
+  //         nationality: responseData['data']['nationality'],
+  //         pinCode: responseData['data']['pin_code']);
 
-      final database = DatabaseProvider();
+  //     final database = DatabaseProvider();
 
-      await database.insertUser(users);
+  //     await database.insertUser(users);
 
-      print(user.phone);
-      if (kDebugMode) {
-        print('-----User Profile Preview: $responseData');
-      }
-      return users; // Return the fetched user profile data
-    } else {
-      // Handle error response
-      if (kDebugMode) {
-        print(
-            '-----Failed to fetch user profile preview. Error: ${response.statusCode}');
-      }
-      return null; // Return null in case of error
-    }
-  }
+  //     print(user.phone);
+  //     if (kDebugMode) {
+  //       print('-----User Profile Preview: $responseData');
+  //     }
+  //     return users; // Return the fetched user profile data
+  //   } else {
+  //     // Handle error response
+  //     if (kDebugMode) {
+  //       print(
+  //           '-----Failed to fetch user profile preview. Error: ${response.statusCode}');
+  //     }
+  //     return null; // Return null in case of error
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
-    fetchData();
+    // fetchData();
   }
 
-  fetchData() async {
-    await fetchUserProfilePreview(); // Wait for user profile preview to fetch
-    getUser(); // Get the user after fetching the profile
-  }
+  // fetchData() async {
+  //   await fetchUserProfilePreview(); // Wait for user profile preview to fetch
+  //   getUser(); // Get the user after fetching the profile
+  // }
 
   getUser() async {
     await db.retrieveUserFromTable().then((value) {

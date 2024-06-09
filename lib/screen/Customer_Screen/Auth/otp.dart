@@ -95,83 +95,91 @@ class _OtpScreenState extends State<OtpScreen> {
     prefs.setBool('isLoggedIn', isLoggedIn);
   }
 
-  confirmOTP(
-    context,
-    String otp,
-    String phoneNumber,
-  ) async {
-    final prrovider = Provider.of<HomeProvider>(context, listen: false);
-    final Map<String, String> payload = {
-      "otp": otp,
-      "mobile_number": phoneNumber
-    };
-
-    if (kDebugMode) {
-      print(payload);
-    }
-
-    try {
-      prrovider.showLoader();
-
-      final http.Response response = await http.post(
-        Uri.parse(baseURL + confirmationEndpoint),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(payload),
-      );
-
-      final Map<String, dynamic> data = jsonDecode(response.body);
-
-      final String token = data['token'];
-      final String id = data['id'];
-      final String firstDigit = id.substring(0, 1);
-      final int firstDigitAsInt = int.parse(firstDigit, radix: 16);
-      // final String userId = data['_id'];
-
-      print(response.body);
-
-      String confirmToken = token;
-      // print("  -----response-----token-----------${confirmToken}");
-      prrovider.setAccessToken(confirmToken);
-      prrovider.setTempNumber(phoneNumber);
-      if (response.statusCode == 200) {
-        final UserModel user = UserModel(
-          id: firstDigitAsInt,
-          accessToken: confirmToken,
-        );
-
-        final databaseProvider = DatabaseProvider();
-        await databaseProvider.insertUser(user);
-        print('-----user-id------${user.id}');
-        print('-----user-token------${user.accessToken}');
-        await saveLoginStatus(true);
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
-        AnimatedSnackBar.material(
-          'Welcome! User ${widget.phoneNumder}',
-          type: AnimatedSnackBarType.success,
-          duration: const Duration(seconds: 5),
-          mobileSnackBarPosition: MobileSnackBarPosition.top,
-        ).show(context);
-
-        prrovider.hideLoader();
-      } else {
-        throw Exception('Failed to confirm OTP');
-      }
-
-      prrovider.hideLoader();
-    } catch (e) {
-      prrovider.hideLoader();
-
-      debugPrint('Error: during OTP confirmation----------- $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error occurred while confirming OTP.'),
-        ),
-      );
-    }
+confirmOTP( context, String otp, String phoneNumber) async {
+  final prrovider = Provider.of<HomeProvider>(context, listen: false);
+  
+  // Check if otp or phoneNumber is null
+  if (otp == null || phoneNumber == null) {
+    debugPrint('Error: OTP or phone number is null');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Error: OTP or phone number is null'),
+      ),
+    );
+    return;
   }
+
+  final Map<String, String> payload = {
+    "otp": otp,
+    "mobile_number": phoneNumber
+  };
+
+  if (kDebugMode) {
+    print(payload);
+  }
+
+  try {
+    prrovider.showLoader();
+
+    final http.Response response = await http.post(
+      Uri.parse(baseURL + confirmationEndpoint),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(payload),
+    );
+
+    final Map<String, dynamic> data = jsonDecode(response.body);
+
+    final String token = data['token'];
+    final String id = data['id'];
+    final String firstDigit = id.substring(0, 1);
+    final int firstDigitAsInt = int.parse(firstDigit, radix: 16);
+    // final String userId = data['_id'];
+
+    print(response.body);
+
+    String confirmToken = token;
+    // print("  -----response-----token-----------${confirmToken}");
+    prrovider.setAccessToken(confirmToken);
+    prrovider.setTempNumber(phoneNumber);
+    if (response.statusCode == 200) {
+      final UserModel user = UserModel(
+        id: firstDigitAsInt,
+        accessToken: confirmToken,
+      );
+
+      final databaseProvider = DatabaseProvider();
+      await databaseProvider.insertUser(user);
+      print('-----user-id------${user.id}');
+      print('-----user-token------${user.accessToken}');
+      await saveLoginStatus(true);
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()));
+      AnimatedSnackBar.material(
+        'Welcome! User $phoneNumber',
+        type: AnimatedSnackBarType.success,
+        duration: const Duration(seconds: 5),
+        mobileSnackBarPosition: MobileSnackBarPosition.top,
+      ).show(context);
+
+      prrovider.hideLoader();
+    } else {
+      throw Exception('Failed to confirm OTP');
+    }
+
+    prrovider.hideLoader();
+  } catch (e) {
+    prrovider.hideLoader();
+
+    debugPrint('Error: during OTP confirmation----------- $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Error occurred while confirming OTP.'),
+      ),
+    );
+  }
+}
 
   Future<void> resendOTP(
       context, String phoneNumber, HomeProvider provider) async {

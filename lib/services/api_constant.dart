@@ -9,6 +9,7 @@ const String getuserProfileEndpoint = "/users/profile/preview"; //GET
 const String updateProfileEndpoint = "/users/profile/update"; //PUT
 const String sendEmailVerificationCode = "/users/send/email"; //POST
 const String verifyEmailCodeEndpoint = "/users/verify/email"; //PUT
+const String listOfAllConcernedLandingPageEndpoint = "users/list_of_all_cencerned"; //GET
 
 /////////////  Advocate //////////
 

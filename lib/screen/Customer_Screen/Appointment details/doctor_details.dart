@@ -103,10 +103,10 @@ class _DoctorDetailsState extends State<DoctorDetails>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Dr. Leelamohan PVR',
+                                'Lawer Leelamohan',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              Text('General Physician'),
+                              Text('Corporate Lawyer'),
                               Text('HSR Layout'),
                               Row(
                                 children: [
@@ -229,7 +229,7 @@ class _DoctorDetailsState extends State<DoctorDetails>
                           ),
                           child: const Center(
                             child: Text(
-                              'Clinic Visit',
+                              'Clinic',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
@@ -308,11 +308,11 @@ class _DoctorDetailsState extends State<DoctorDetails>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Doctor Fiendliness',
+                            'Advocate Fiendliness',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            '80% patients find the doctor friendly and approachable',
+                            '80% clients find the advocate friendly and approachable',
                             style: TextStyle(fontSize: 10),
                           )
                         ],
@@ -325,11 +325,11 @@ class _DoctorDetailsState extends State<DoctorDetails>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Doctor Fiendliness',
+                            'Advocate Fiendliness',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            '80% patients find the doctor friendly and approachable',
+                            '80% clients find the advocate friendly and approachable',
                             style: TextStyle(fontSize: 10),
                           )
                         ],
@@ -342,11 +342,11 @@ class _DoctorDetailsState extends State<DoctorDetails>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Doctor Fiendliness',
+                            'Advocate Fiendliness',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            '80% patients find the doctor friendly and approachable',
+                            '80% clients find the advocate friendly and approachable',
                             style: TextStyle(fontSize: 10),
                           )
                         ],
@@ -359,11 +359,11 @@ class _DoctorDetailsState extends State<DoctorDetails>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Doctor Fiendliness',
+                            'Advocate Fiendliness',
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            '80% patients find the doctor friendly and approachable',
+                            '80% clients find the advocate friendly and approachable',
                             style: TextStyle(fontSize: 10),
                           )
                         ],
