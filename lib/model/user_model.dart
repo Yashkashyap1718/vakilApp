@@ -33,26 +33,6 @@ class UserModel {
     this.accessToken,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      '_id': id,
-      'role': role,
-      'token': accessToken,
-      'first_name': firstName,
-      'last_name': lastName,
-      'email': email,
-      'gender': gender,
-      'date_of_birth': dateOfBirth,
-      'nationality': nationality,
-      'address': address,
-      'city': city,
-      'state': state,
-      'country': country,
-      'pin_code': pinCode,
-      'phone': phone
-    };
-  }
-
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
         id: json['_id'] ?? 1,
@@ -70,5 +50,24 @@ class UserModel {
         country: json['country'] ?? "",
         pinCode: json['pin_code'] ?? "",
         phone: json['phone'] ?? "");
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'role': role,
+      'token': accessToken,
+      'first_name': firstName,
+      'last_name': lastName,
+      'email': email,
+      'gender': gender,
+      'date_of_birth': dateOfBirth,
+      'nationality': nationality,
+      'address': address,
+      'city': city,
+      'state': state,
+      'country': country,
+      'pin_code': pinCode,
+      'phone': phone
+    };
   }
 }

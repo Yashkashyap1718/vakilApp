@@ -261,9 +261,9 @@ class _MyDrawerState extends State<MyDrawer> {
                             decoration: BoxDecoration(
                                 color: const Color.fromARGB(255, 185, 48, 156),
                                 borderRadius: BorderRadius.circular(3)),
-                            child: const Center(
+                            child: Center(
                               child: Text(
-                                'PLUS',
+                                user.id.toString(),
                                 style: TextStyle(
                                     color: whiteColor,
                                     fontWeight: FontWeight.bold,

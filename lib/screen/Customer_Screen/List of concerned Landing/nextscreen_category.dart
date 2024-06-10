@@ -8,16 +8,16 @@ import 'package:http/http.dart' as http;
 import 'package:vakil_app/screen/Customer_Screen/Appointment%20details/appointment_details.dart';
 import 'package:vakil_app/services/api_constant.dart';
 
-class ListOfConcernedUserLandingPage extends StatefulWidget {
-  const ListOfConcernedUserLandingPage({super.key});
+class Subcategory extends StatefulWidget {
+  const Subcategory({super.key, required this.slug});
+
+  final String slug;
 
   @override
-  State<ListOfConcernedUserLandingPage> createState() =>
-      _ListOfConcernedUserLandingPageState();
+  State<Subcategory> createState() => _SubcategoryState();
 }
 
-class _ListOfConcernedUserLandingPageState
-    extends State<ListOfConcernedUserLandingPage> {
+class _SubcategoryState extends State<Subcategory> {
   String selectedLocation = 'Location 1';
   final TextEditingController searchController = TextEditingController();
 
@@ -43,17 +43,17 @@ class _ListOfConcernedUserLandingPageState
   Future<void> listofConcernedLanding(String token) async {
     try {
       final response = await http.get(
-        Uri.parse(baseURL + listOfAllConcernedLandingPageEndpoint),
+        Uri.parse(baseURL + userAdvocateConcernedLandingPageEndpoint),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'token': token,
         },
       );
 
-      final Map<String, dynamic> data = jsonDecode(response.body);
+      //  data = jsonDecode(response.body);
 
       setState(() {
-        getData = data['data'];
+        // getData = data['data'];
         _filteredData = getData;
       });
 

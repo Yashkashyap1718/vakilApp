@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List listImages = [lawImg, lawImg, lawImg];
   final List gridText = ["Book\nAppointment", "Instant Video\nConsult"];
   final List gridbelowText = ["Confirm appointment", "Correct within 60 secs"];
-  final List ListText = ["Medicine", "Lab Tests", "Surgeries"];
+  final List ListText = ["Lawer", "Client", "All"];
 
   UserModel user = UserModel();
   // DatabaseProvider db = DatabaseProvider();

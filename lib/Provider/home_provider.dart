@@ -252,7 +252,7 @@ class HomeProvider extends ChangeNotifier {
     try {
       provider.showLoader();
       final http.Response response = await http.post(
-        Uri.parse(baseURL + adminSignInEndpoint),
+        Uri.parse(baseURL + advocateSignInEndpoint),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -315,7 +315,7 @@ class HomeProvider extends ChangeNotifier {
       prrovider.showLoader();
 
       final http.Response response = await http.post(
-        Uri.parse(baseURL + adminConfirmationEndpoint),
+        Uri.parse(baseURL + advocateConfirmationEndpoint),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -453,7 +453,7 @@ class HomeProvider extends ChangeNotifier {
     try {
       // Send the POST request
       final http.Response response = await http.post(
-        Uri.parse(baseURL + adminCategoryListEndpoint),
+        Uri.parse(baseURL + advocateCategoryListEndpoint),
         headers: headers,
         body: jsonPayload,
       );
@@ -481,7 +481,7 @@ class HomeProvider extends ChangeNotifier {
     try {
       // Send the GET request
       final http.Response response = await http.get(
-        Uri.parse(baseURL + adminCategoryListEndpoint),
+        Uri.parse(baseURL + advocateCategoryListEndpoint),
         headers: headers,
       );
 
@@ -521,7 +521,7 @@ class HomeProvider extends ChangeNotifier {
     try {
       // Send the POST request
       final http.Response response = await http.post(
-        Uri.parse(baseURL + adminAddSubCategoryEndpoint),
+        Uri.parse(baseURL + advocateAddSubCategoryEndpoint),
         headers: headers,
         body: jsonPayload,
       );
@@ -542,7 +542,7 @@ class HomeProvider extends ChangeNotifier {
   ////   Subcategory List
   Future<void> fetchSubcategories(String categoryId) async {
     // Add the query parameter
-    final Uri uri = Uri.parse(baseURL + adminSubCategoryListEndpoint)
+    final Uri uri = Uri.parse(baseURL + advocateSubCategoryListEndpoint)
         .replace(queryParameters: {"category_id": categoryId});
 
     // Set the headers

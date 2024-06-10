@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
               //     titleTextStyle: TextStyle(color: whiteColor, fontSize: 18)),
               useMaterial3: true,
               fontFamily: GoogleFonts.lato().fontFamily),
-          home: const HomeScreen()
+          home: const MobileScreen()
 
           // initialRoute: initialRoute,
           // routes: routes,

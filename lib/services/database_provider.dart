@@ -31,7 +31,6 @@ class DatabaseProvider {
       country TEXT,
       state TEXT,
       phone TEXT,
-      role TEXT
     )
     ''',
         );
@@ -42,7 +41,7 @@ class DatabaseProvider {
   Future<bool> insertUser(UserModel user) async {
     try {
       final db = await initializedDB();
-      await db.insert(userTableName, user.toMap(),
+      await db.insert(userTableName, user.toJson(),
           conflictAlgorithm: ConflictAlgorithm.replace);
 
       return true;

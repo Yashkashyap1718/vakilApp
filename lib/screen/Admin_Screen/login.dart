@@ -37,7 +37,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
     try {
       provider.showLoader();
       final http.Response response = await http.post(
-        Uri.parse(baseURL + adminSignInEndpoint),
+        Uri.parse(baseURL + advocateSignInEndpoint),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -91,7 +91,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
       prrovider.showLoader();
 
       final http.Response response = await http.post(
-        Uri.parse(baseURL + adminConfirmationEndpoint),
+        Uri.parse(baseURL + advocateConfirmationEndpoint),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -104,12 +104,12 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
 
       String confirmToken = data['token'];
 
-      String role = data['role'];
+      // String role = data['role'];
       print(confirmToken);
       if (response.statusCode == 200) {
-        final UserModel user = UserModel(role: role);
-        final database = DatabaseProvider();
-        await database.insertUser(user);
+        // final UserModel user = UserModel(role: role);
+        // final database = DatabaseProvider();
+        // await database.insertUser(user);
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const HomeScreen()));
         AnimatedSnackBar.material(

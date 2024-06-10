@@ -83,6 +83,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
       final String token = data['token'];
       final String id = data['id'];
+      final String roleType = data['type'];
       final String firstDigit = id.substring(0, 1);
       final int firstDigitAsInt = int.parse(firstDigit, radix: 16);
       // final String userId = data['_id'];
@@ -94,18 +95,17 @@ class _OtpScreenState extends State<OtpScreen> {
       prrovider.setAccessToken(confirmToken);
       prrovider.setTempNumber(phoneNumber);
       if (response.statusCode == 200) {
+        await saveLoginStatus(true);
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
+
         final UserModel user = UserModel(
-          id: firstDigitAsInt,
-          accessToken: confirmToken,
-        );
+            id: firstDigitAsInt, accessToken: confirmToken, role: roleType);
 
         final databaseProvider = DatabaseProvider();
         await databaseProvider.insertUser(user);
         print('-----user-id------${user.id}');
         print('-----user-token------${user.accessToken}');
-        await saveLoginStatus(true);
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
         AnimatedSnackBar.material(
           'Welcome! User $phoneNumber',
           type: AnimatedSnackBarType.success,

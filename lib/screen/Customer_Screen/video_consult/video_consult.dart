@@ -116,11 +116,11 @@ class _VideoConsultScreenState extends State<VideoConsultScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              'Dr. Leelamohan PVR',
+                                              'Lawer Leelamohan',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
-                                            Text('General Physician'),
+                                            Text('Corporate Lawyer'),
                                             Row(
                                               children: [
                                                 Text(
